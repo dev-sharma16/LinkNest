@@ -1,10 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export function PasswordUnlockForm({ slug }: { slug: string }) {
-  const router = useRouter();
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,8 +28,7 @@ export function PasswordUnlockForm({ slug }: { slug: string }) {
       return;
     }
 
-    router.replace(`/${encodeURIComponent(slug)}`);
-    router.refresh();
+    window.location.replace(`/${encodeURIComponent(slug)}`);
   }
 
   return (
