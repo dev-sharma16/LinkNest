@@ -80,6 +80,32 @@ QRCode
 
 UTMTemplates
 
+Profiles
+
+SocialLinks
+
+BioBlocks
+
+BioEvents
+
+Leads
+
+---
+
+Relationships
+
+User → Profile (1:1)
+
+Profile → SocialLink (1:N)
+
+Profile → BioBlock (1:N)
+
+Profile → BioEvent (1:N)
+
+Profile → Lead (1:N)
+
+BioBlock → BioEvent (1:N, optional)
+
 ---
 
 Indexes

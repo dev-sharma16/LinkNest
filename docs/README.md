@@ -203,13 +203,21 @@ Creator profile pages with customization and analytics.
 
 ## Phase 3
 
+Link in Bio
+
+Creator profile pages with customizable landing pages, content blocks, social links, themes, and engagement analytics.
+
+---
+
+## Phase 4
+
 Digital Products
 
 Sell digital products directly from LinkNest.
 
 ---
 
-## Phase 4
+## Phase 5
 
 Creator Platform
 
@@ -217,7 +225,7 @@ Audience management, creator tools, and monetization features.
 
 ---
 
-## Phase 5
+## Phase 6
 
 AI
 
@@ -225,7 +233,7 @@ AI-powered content generation, recommendations, and automation.
 
 ---
 
-## Phase 6
+## Phase 7
 
 Teams & Organizations
 
@@ -233,7 +241,7 @@ Collaboration features for businesses and agencies.
 
 ---
 
-## Phase 7+
+## Phase 8+
 
 Marketing, Integrations, Enterprise, Mobile Apps, and future platform expansions.
 

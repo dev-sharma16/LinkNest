@@ -72,17 +72,19 @@ Phase 1 — Smart Links
 
 Phase 2 — Bio Pages
 
-Phase 3 — Digital Products
+Phase 3 — Link in Bio
 
-Phase 4 — Creator Platform
+Phase 4 — Digital Products
 
-Phase 5 — AI
+Phase 5 — Creator Platform
 
-Phase 6 — Teams
+Phase 6 — AI
 
-Phase 7 — Marketing
+Phase 7 — Teams
 
-Phase 8 — Enterprise
+Phase 8 — Marketing
+
+Phase 9 — Enterprise
 
 ---
 
