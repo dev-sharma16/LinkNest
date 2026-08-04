@@ -10,6 +10,7 @@ import {
   Settings,
   Menu,
   X,
+  UserRound,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ import { UserMenu } from "@/components/dashboard/user-menu";
 const navItems = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/links", label: "Links", icon: LinkIcon },
+  { href: "/bio", label: "Link in Bio", icon: UserRound },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
@@ -29,11 +31,14 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <nav className="flex flex-col gap-1 px-2">
       {navItems.map((item) => {
-        const active = item.href === "/links"
-          ? pathname.startsWith("/links")
-          : item.href === "/analytics"
-            ? pathname.startsWith("/analytics")
-            : pathname === item.href;
+        const active =
+          item.href === "/links"
+            ? pathname.startsWith("/links")
+            : item.href === "/bio"
+              ? pathname.startsWith("/bio")
+              : item.href === "/analytics"
+                ? pathname.startsWith("/analytics")
+                : pathname === item.href;
         return (
           <Link
             key={item.href}
