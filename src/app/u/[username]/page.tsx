@@ -112,7 +112,11 @@ export default async function BioPage({
 
         {profile.website ? (
           <a
-            href={profile.website}
+            href={
+              /^https?:\/\//i.test(profile.website)
+                ? profile.website
+                : `https://${profile.website}`
+            }
             target="_blank"
             rel="noopener noreferrer"
             className="mt-1 inline-block text-sm underline opacity-70"

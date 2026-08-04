@@ -109,7 +109,7 @@ export async function updateProfile(userId: string, input: unknown) {
       displayName: data.displayName,
       bio: data.bio || null,
       location: data.location || null,
-      website: data.website || null,
+      website: normalizeWebsite(data.website),
       avatar: data.avatar || null,
       visibility: data.visibility,
       seoTitle: data.seoTitle || null,
@@ -117,6 +117,13 @@ export async function updateProfile(userId: string, input: unknown) {
       ogImage: data.ogImage || null,
     },
   });
+}
+
+function normalizeWebsite(website?: string): string | null {
+  if (!website) return null;
+  const trimmed = website.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
 }
 
 export async function setProfilePublished(userId: string, published: boolean) {

@@ -13,6 +13,20 @@ const dateOrEmpty = z
 // Profile
 // ============================================================
 
+const websiteField = z
+  .string()
+  .max(500, "URL is too long")
+  .optional()
+  .or(z.literal(""))
+  .refine(
+    (v) =>
+      v === undefined ||
+      v === "" ||
+      /^https?:\/\//i.test(v) ||
+      /^(?!-)[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+(?:\/[^\s]*)?$/.test(v),
+    { message: "Enter a valid URL (include https://)" },
+  );
+
 export const profileSchema = z.object({
   username: z
     .string()
@@ -25,7 +39,7 @@ export const profileSchema = z.object({
   displayName: z.string().min(1).max(64),
   bio: z.string().max(500).optional().or(z.literal("")),
   location: z.string().max(100).optional().or(z.literal("")),
-  website: z.string().url("Enter a valid URL").max(500).optional().or(z.literal("")),
+  website: websiteField,
   avatar: z.string().url("Enter a valid image URL").max(1000).optional().or(z.literal("")),
   visibility: z.enum(["public", "private"]).default("public"),
   seoTitle: z.string().max(120).optional().or(z.literal("")),
