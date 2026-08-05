@@ -11,6 +11,7 @@ import {
   Menu,
   X,
   UserRound,
+  Store,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ const navItems = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/links", label: "Links", icon: LinkIcon },
   { href: "/bio", label: "Link in Bio", icon: UserRound },
+  { href: "/storefronts", label: "Storefronts", icon: Store },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
@@ -36,9 +38,11 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
             ? pathname.startsWith("/links")
             : item.href === "/bio"
               ? pathname.startsWith("/bio")
-              : item.href === "/analytics"
-                ? pathname.startsWith("/analytics")
-                : pathname === item.href;
+              : item.href === "/storefronts"
+                ? pathname.startsWith("/storefronts")
+                : item.href === "/analytics"
+                  ? pathname.startsWith("/analytics")
+                  : pathname === item.href;
         return (
           <Link
             key={item.href}
