@@ -15,6 +15,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
 import { UploadButton } from "@/components/bio/upload-button";
+import { useStorefronts } from "@/hooks/use-storefronts";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { BlockType } from "@/lib/validations/bio";
 
 export function BlockConfigForm({
@@ -254,6 +256,9 @@ export function BlockConfigForm({
         </div>
       );
 
+    case "storefront":
+      return <StorefrontPicker config={cfg} onChange={set} />;
+
     case "pdf_viewer":
       return (
         <div className="grid gap-3">
@@ -301,6 +306,74 @@ function ImageInput({ value, onChange }: { value: string; onChange: (url: string
           onBlur={(e) => e.target.value && onChange(e.target.value)}
         />
       </div>
+    </div>
+  );
+}
+
+function StorefrontPicker({
+  config,
+  onChange,
+}: {
+  config: Record<string, unknown>;
+  onChange: (key: string, value: unknown) => void;
+}) {
+  const { data: storefronts, isLoading } = useStorefronts();
+  const pickable = (storefronts ?? []).filter((s) => !s.archived);
+  const selectedId = String(config.storefrontId ?? "");
+  const selected = pickable.find((s) => s.id === selectedId);
+
+  return (
+    <div className="grid gap-3">
+      <Field label="Storefront">
+        {isLoading ? (
+          <Skeleton className="h-9 w-full" />
+        ) : !pickable.length ? (
+          <p className="rounded-lg border border-dashed p-3 text-xs text-muted-foreground">
+            You don&apos;t have any storefronts yet. Create one in the Storefronts section first.
+          </p>
+        ) : (
+          <Select
+            value={selectedId}
+            onValueChange={(id) => {
+              const s = pickable.find((sf) => sf.id === id);
+              onChange("storefrontId", id);
+              onChange("slug", s?.slug ?? "");
+              onChange("name", s?.name ?? "");
+              onChange("coverImage", s?.coverImage ?? "");
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Choose a storefront" />
+            </SelectTrigger>
+            <SelectContent>
+              {pickable.map((s) => (
+                <SelectItem key={s.id} value={s.id}>
+                  {s.name} (/s/{s.slug})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+      </Field>
+      {selected ? (
+        <div className="flex items-center gap-3 rounded-lg border p-3">
+          {selected.coverImage ? (
+            <img
+              src={selected.coverImage}
+              alt=""
+              className="h-12 w-16 rounded border object-cover"
+              width={64}
+              height={48}
+            />
+          ) : null}
+          <div className="min-w-0">
+            <p className="truncate text-sm font-medium">{selected.name}</p>
+            <p className="text-xs text-muted-foreground">
+              /s/{selected.slug} · {selected._count.products} products
+            </p>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

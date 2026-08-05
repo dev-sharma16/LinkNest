@@ -124,6 +124,7 @@ export const BLOCK_TYPES = [
   "html",
   "file_download",
   "pdf_viewer",
+  "storefront",
 ] as const;
 
 export type BlockType = (typeof BLOCK_TYPES)[number];
