@@ -28,6 +28,7 @@ export const BLOCK_TYPES_LIST = [
   "html",
   "file_download",
   "pdf_viewer",
+  "storefront",
 ];
 
 export async function getProfileByUser(userId: string) {

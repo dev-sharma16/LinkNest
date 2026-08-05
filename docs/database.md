@@ -90,6 +90,12 @@ BioEvents
 
 Leads
 
+Storefronts
+
+ProductCards
+
+StorefrontEvents
+
 ---
 
 Relationships
@@ -105,6 +111,16 @@ Profile → BioEvent (1:N)
 Profile → Lead (1:N)
 
 BioBlock → BioEvent (1:N, optional)
+
+User → Storefront (1:N)
+
+Storefront → ProductCard (1:N)
+
+Storefront → StorefrontEvent (1:N)
+
+ProductCard → StorefrontEvent (1:N, optional)
+
+Storefront → StorefrontEvent (1:N)
 
 ---
 
@@ -165,8 +181,6 @@ Timestamp
 ---
 
 Future Tables
-
-Products
 
 Orders
 

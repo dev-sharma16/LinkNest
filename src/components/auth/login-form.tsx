@@ -10,9 +10,10 @@ import { loginSchema, type LoginValues } from "@/lib/validations/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { GoogleButton } from "@/components/auth/google-button";
 import { toast } from "sonner";
 
-export function LoginForm() {
+export function LoginForm({ googleEnabled = false }: { googleEnabled?: boolean }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -43,6 +44,23 @@ export function LoginForm() {
   }
 
   return (
+    <div className="grid gap-4">
+      {googleEnabled && (
+        <>
+          <GoogleButton />
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-muted-foreground">
+                or continue with email
+              </span>
+            </div>
+          </div>
+        </>
+      )}
+
     <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4" noValidate>
       <div className="grid gap-2">
         <Label htmlFor="email">Email</Label>
@@ -86,5 +104,6 @@ export function LoginForm() {
         {isLoading ? "Signing in…" : "Sign in"}
       </Button>
     </form>
+    </div>
   );
 }

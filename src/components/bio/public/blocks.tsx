@@ -162,6 +162,39 @@ function BlockView({
         </ClickableLink>
       );
 
+    case "storefront": {
+      const slug = String(config.slug ?? "");
+      const name = String(config.name ?? "Storefront");
+      const coverImage = String(config.coverImage ?? "");
+      const storeHref = slug ? `/s/${encodeURIComponent(slug)}` : url;
+      return (
+        <ClickableLink
+          username={username}
+          blockId={block.id}
+          href={storeHref}
+          className="flex items-center gap-3 overflow-hidden rounded-2xl border px-4 py-3 text-left"
+          style={{
+            background: "var(--bio-card, #ffffff)",
+            borderColor: "rgba(0,0,0,0.1)",
+          }}
+        >
+          {coverImage ? (
+            <img
+              src={coverImage}
+              alt=""
+              className="h-12 w-16 shrink-0 rounded-lg border object-cover"
+              width={64}
+              height={48}
+            />
+          ) : null}
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-base font-semibold">{name}</span>
+            <span className="block text-sm opacity-70">Visit storefront →</span>
+          </span>
+        </ClickableLink>
+      );
+    }
+
     case "pdf_viewer":
       return (
         <iframe

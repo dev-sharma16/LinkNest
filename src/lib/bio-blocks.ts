@@ -177,6 +177,13 @@ export const BLOCK_META: Record<BlockType, BlockMeta> = {
     description: "Embed a PDF document.",
     defaults: { url: "" },
   },
+  storefront: {
+    type: "storefront",
+    label: "Storefront",
+    category: "utility",
+    description: "Link one of your storefronts.",
+    defaults: { storefrontId: "", slug: "", name: "", coverImage: "" },
+  },
 };
 
 export const BLOCK_CATEGORIES: {
