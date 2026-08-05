@@ -2,9 +2,11 @@
 
 ## Goal
 
-Build LinkNest's Storefront platform that enables creators to showcase, organize, and promote products from a single branded storefront.
+Build LinkNest's Storefront platform that enables creators to showcase and recommend products through beautifully organized storefronts.
 
-This phase should deliver a complete, production-ready storefront solution capable of replacing platforms like Beacons for product discovery and promotion while integrating seamlessly with the LinkNest ecosystem.
+This phase should deliver a complete, production-ready storefront solution capable of replacing Beacons Storefront, allowing creators to share affiliate links, favorite products, tools, books, gear, software, and other recommendations from a single branded page.
+
+LinkNest does **not** sell products or process payments. It acts as a discovery and recommendation platform that redirects visitors to the original product website.
 
 ---
 
@@ -12,16 +14,15 @@ This phase should deliver a complete, production-ready storefront solution capab
 
 The application must allow users to:
 
-- Create a public storefront
-- Showcase products
-- Organize products into collections
-- Promote affiliate products
-- Feature digital and physical products
-- Build product landing pages
-- Increase product conversions
-- Track product performance
+- Create multiple storefronts
+- Organize products into different storefronts
+- Showcase recommended products
+- Link products to external websites
+- Customize storefront appearance
+- Share storefronts using a public URL
+- Track storefront and product engagement
 
-Everything built in this phase should be modular, reusable, and integrate with existing LinkNest accounts, analytics, and Link in Bio pages.
+Everything built in this phase should integrate seamlessly with LinkNest accounts, analytics, and Link in Bio pages.
 
 ---
 
@@ -29,26 +30,25 @@ Everything built in this phase should be modular, reusable, and integrate with e
 
 This phase includes:
 
-- Storefront
-- Product management
-- Digital products
-- Physical products
-- Affiliate products
-- Collections
-- Product categories
-- Landing pages
-- Product customization
-- Product analytics
+- Storefront management
+- Public storefront pages
+- Product cards
+- External product links
+- Storefront customization
+- Storefront analytics
+- Shareable storefront URLs
 
 This phase does NOT include:
 
-- Payment Processing
 - Shopping Cart
-- Order Management
+- Checkout
+- Payment Processing
 - Inventory Management
-- Subscription Products
-- Memberships
-- AI Product Recommendations
+- Order Management
+- Product Hosting
+- Digital Product Delivery
+- Membership Products
+- AI Recommendations
 - Marketplace
 - Multi-vendor Support
 
@@ -60,192 +60,138 @@ Those belong to future phases.
 
 ---
 
-## Storefront
+## Storefront Management
 
-Every creator can build a public storefront.
-
-### Features
-
-- Public Store URL
-- Store Name
-- Store Logo
-- Store Banner
-- Store Description
-- Featured Products
-- Featured Collections
-- Search Products
-- Share Store
-
----
-
-## Product Management
-
-Users can create and manage products.
-
-### Core
-
-- Create Product
-- Edit Product
-- Delete Product
-- Publish Product
-- Draft Products
-- Archive Products
-- Duplicate Product
-
-### Organization
-
-- Search
-- Filters
-- Sorting
-- Pagination
-- Categories
-- Collections
-- Featured Products
-- Product Tags
-
----
-
-## Product Types
-
-The storefront should support multiple product types.
-
-### Digital Products
-
-- E-books
-- PDFs
-- Templates
-- Notion Templates
-- Design Assets
-- Presets
-- Downloads
-- Software Licenses
-
-### Physical Products
-
-- Merchandise
-- Accessories
-- Equipment
-- Creator Products
-- Custom Products
-
-### Affiliate Products
-
-- Amazon Products
-- Software
-- Creator Tools
-- Recommended Products
-- External Product Links
-
----
-
-## Collections
-
-Users can organize products into collections.
+Users can create multiple storefronts for different topics.
 
 ### Features
 
-- Create Collection
-- Edit Collection
-- Delete Collection
-- Featured Collection
-- Collection Cover Image
-- Collection Description
-- Collection Sorting
-
-### Example Collections
-
-- Tech Setup
-- Books
-- Courses
-- Software
-- Gear
-- Productivity
-- Content Creation
-- Photography
-- Video Editing
+- Create Storefront
+- Edit Storefront
+- Delete Storefront
+- Duplicate Storefront
+- Publish Storefront
+- Draft Storefront
+- Archive Storefront
+- Share Storefront
 
 ---
 
-## Product Pages
+## Storefront Details
 
-Every product should have its own landing page.
-
-### Features
-
-- Product Title
-- Product Description
-- Product Images
-- Image Gallery
-- Product Category
-- Product Tags
-- Product Highlights
-- External Purchase Link
-- Related Products
-- Share Product
-
----
-
-## Product Content
-
-Creators should be able to enrich every product listing.
+Each storefront contains its own branding.
 
 ### Features
 
-- Rich Text Description
-- Image Gallery
-- Feature List
-- Specifications
-- Pricing Information
-- Availability Status
-- External Links
-- Download Information (Future Ready)
-
----
-
-## Reviews
-
-Products can display customer feedback.
-
-### Features
-
-- Star Ratings
-- Written Reviews
-- Featured Reviews
-- Average Rating
-- Review Count
-
----
-
-## Call-to-Action
-
-Every product should encourage user engagement.
-
-### Features
-
-- Buy Now
-- Visit Website
-- Download
-- Learn More
-- Affiliate Link
-- Contact Creator
-- Custom CTA Button
-
----
-
-## Store Customization
-
-Creators can personalize their storefront.
-
-### Features
-
-- Store Theme
-- Brand Colors
-- Typography
+- Storefront Title
+- Description
+- Cover Image
 - Banner Image
-- Product Card Styles
-- Featured Sections
-- Collection Layout
-- Responsive Design
+- Custom Slug
+- Visibility Settings
+- SEO Metadata
+- Open Graph Image
+
+---
+
+## Product Cards
+
+Each storefront contains multiple product cards.
+
+A product card represents a recommendation and links to an external website.
+
+### Features
+
+- Product Image
+- Product Title
+- Short Description
+- External Product URL
+- Custom CTA Button
+- Featured Product
+- Display Order
+
+---
+
+## Supported Product Sources
+
+Creators can link products from any platform.
+
+Examples include:
+
+- Amazon
+- Flipkart
+- Myntra
+- Meesho
+- Ajio
+- Nykaa
+- Apple
+- Google Play
+- Steam
+- Gumroad
+- Lemon Squeezy
+- Etsy
+- Shopify
+- Notion
+- AppSumo
+- Custom URLs
+
+---
+
+## Product Organization
+
+Creators should be able to manage products easily.
+
+### Features
+
+- Drag & Drop Reordering
+- Duplicate Product Card
+- Search Products
+- Filters
+- Bulk Delete
+- Bulk Import
+- Bulk Export
+
+---
+
+## Storefront Customization
+
+Creators can personalize every storefront.
+
+### Themes
+
+- Light Theme
+- Dark Theme
+- Preset Themes
+
+### Colors
+
+- Primary Color
+- Secondary Color
+- Accent Color
+- Button Color
+- Text Color
+
+### Typography
+
+- Font Family
+- Font Size
+- Font Weight
+
+### Layout
+
+- Grid Layout
+- List Layout
+- Card Style
+- Card Radius
+- Card Shadow
+- Button Style
+- Product Spacing
+
+### Background
+
+- Solid Color
+- Gradient
+- Background Image
 
 ---
 
@@ -256,15 +202,14 @@ Every storefront should collect engagement data.
 Track
 
 - Store Views
-- Product Views
 - Product Clicks
-- Collection Views
 - CTA Clicks
 - Top Products
-- Top Collections
-- Referrers
-- Devices
-- Countries
+- Top Storefronts
+- Device
+- Browser
+- Country
+- Referrer
 - Timeline
 
 Reports
@@ -277,22 +222,34 @@ Reports
 
 ---
 
+## Sharing
+
+Storefronts should be easy to share.
+
+### Features
+
+- Public URL
+- Copy Link
+- QR Code
+- Social Sharing
+- Open Graph Preview
+
+---
+
 # Functional Requirements
 
 Users must be able to:
 
-- Create a storefront
-- Add products
-- Edit products
-- Delete products
-- Organize collections
-- Feature products
-- Create product landing pages
-- Upload product images
-- Write product descriptions
-- Display reviews
-- Add CTA buttons
-- Share products
+- Create multiple storefronts
+- Customize storefront details
+- Add unlimited product cards
+- Edit product cards
+- Delete product cards
+- Reorder product cards
+- Link products to external websites
+- Customize CTA buttons
+- Publish storefronts
+- Share storefront URLs
 - View storefront analytics
 
 ---
@@ -310,7 +267,6 @@ The application should be:
 - Production Ready
 - Scalable
 - Maintainable
-- Highly Customizable
 
 ---
 
@@ -319,12 +275,14 @@ The application should be:
 While building Phase 4:
 
 - Build one feature completely before starting another.
-- Keep products modular.
-- Make storefront components reusable.
-- Optimize page loading performance.
+- Keep storefronts modular.
+- Make product cards reusable.
+- Optimize page performance.
 - Validate every input.
 - Handle every possible error.
-- Keep storefronts SEO optimized.
+- Never store product inventory or pricing.
+- Never process payments.
+- Always redirect users to the original product website.
 - Follow the project rules document.
 - Follow the tech stack document.
 - Follow the database document.
@@ -333,29 +291,25 @@ While building Phase 4:
 
 # Development Order
 
-1. Storefront Setup
+1. Storefront Management
 
-2. Product Management
+2. Storefront Details
 
-3. Product Types
+3. Product Cards
 
-4. Collections
+4. External Product Links
 
-5. Product Landing Pages
+5. Product Organization
 
-6. Product Content
+6. Storefront Customization
 
-7. Reviews
+7. Analytics
 
-8. CTA Buttons
+8. Sharing
 
-9. Store Customization
+9. Testing
 
-10. Analytics
-
-11. Testing
-
-12. Polish
+10. Polish
 
 ---
 
@@ -363,16 +317,14 @@ While building Phase 4:
 
 Phase 4 is complete when:
 
-- Storefronts are fully functional.
-- Products can be created and managed.
-- Digital, physical, and affiliate products are supported.
-- Collections work correctly.
-- Product landing pages are complete.
-- Product descriptions and images display properly.
-- Reviews function correctly.
-- CTA buttons work as expected.
-- Store customization is complete.
-- Analytics display accurate data.
+- Users can create multiple storefronts.
+- Storefronts have customizable branding.
+- Product cards can be added and managed.
+- External product links redirect correctly.
+- Drag-and-drop ordering works.
+- Storefront customization is complete.
+- Analytics display accurate engagement data.
+- Public storefront pages are shareable.
 - No major bugs remain.
 - Documentation is updated.
 
@@ -387,11 +339,12 @@ The following features are intentionally excluded from Phase 4:
 - Payment Gateway
 - Order Management
 - Inventory Tracking
+- Digital Product Hosting
 - Membership Products
 - Subscription Billing
 - Marketplace
 - AI Product Recommendations
-- Multi-vendor Support
+- Multi-vendor Marketplace
 - Mobile Applications
 
-These will be implemented in future phases.
+These will be implemented in future phases if required.
