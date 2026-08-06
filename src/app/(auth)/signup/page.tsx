@@ -3,10 +3,14 @@ import Link from "next/link";
 import { AuthCard } from "@/components/auth/auth-card";
 import { SignupForm } from "@/components/auth/signup-form";
 import { env } from "@/lib/env";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Create an account",
-};
+  description:
+    "Create your free LinkNest account and start shortening links, building a link-in-bio page and tracking clicks in seconds.",
+  path: "/signup",
+});
 
 export default function SignupPage() {
   const googleEnabled = Boolean(

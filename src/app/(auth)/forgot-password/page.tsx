@@ -2,10 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AuthCard } from "@/components/auth/auth-card";
 import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Forgot password",
-};
+  description:
+    "Enter your email and we'll send you a link to reset your LinkNest account password.",
+  path: "/forgot-password",
+});
 
 export default function ForgotPasswordPage() {
   return (

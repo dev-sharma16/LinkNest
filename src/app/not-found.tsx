@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { LinkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+  title: "Page not found",
+  description: "The page you are looking for doesn't exist or has been removed.",
+  robots: { index: false, follow: false },
+};
 
 export default function NotFound() {
   return (

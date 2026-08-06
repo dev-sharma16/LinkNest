@@ -1,7 +1,33 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { LinkIcon, BarChart3, QrCode, ShieldCheck, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { JsonLd } from "@/components/seo/json-ld";
 import { getCurrentUser } from "@/lib/session";
+import {
+  absoluteUrl,
+  pageMetadata,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TAGLINE,
+} from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+  title: "Smart Links, Link in Bio & Storefronts for Creators",
+  description: SITE_DESCRIPTION,
+  path: "/",
+  openGraph: {
+    type: "website",
+    images: [
+      {
+        url: absoluteUrl("/og"),
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} — ${SITE_TAGLINE}`,
+      },
+    ],
+  },
+});
 
 const features = [
   {
@@ -36,6 +62,25 @@ export default async function HomePage() {
 
   return (
     <div className="flex min-h-dvh flex-col">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              name: SITE_NAME,
+              url: absoluteUrl("/"),
+              logo: absoluteUrl("/icon"),
+            },
+            {
+              "@type": "WebSite",
+              name: SITE_NAME,
+              url: absoluteUrl("/"),
+              description: SITE_DESCRIPTION,
+            },
+          ],
+        }}
+      />
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6">
         <Link href="/" className="flex items-center gap-2">
           <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">

@@ -1,53 +1,25 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import { prisma } from "@/lib/prisma";
 import { toTheme, themeVars } from "@/lib/bio-css";
 import { ViewTracker } from "@/components/bio/public/view-tracker";
 import { BlockRenderer } from "@/components/bio/public/blocks";
-import { APP_URL } from "@/lib/env";
+import { JsonLd } from "@/components/seo/json-ld";
+import {
+  absoluteUrl,
+  DEFAULT_OG_IMAGE,
+  SITE_NAME,
+  siteMetadata,
+  truncate,
+} from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ username: string }>;
-}): Promise<Metadata> {
-  const { username } = await params;
-  const profile = await prisma.profile.findFirst({
-    where: { username, published: true, visibility: "public", deletedAt: null },
-    select: {
-      displayName: true,
-      bio: true,
-      seoTitle: true,
-      seoDescription: true,
-      ogImage: true,
-      avatar: true,
-    },
-  });
-  if (!profile) return { title: "Profile not found" };
-  return {
-    title: profile.seoTitle || profile.displayName,
-    description:
-      profile.seoDescription ||
-      profile.bio ||
-      `${profile.displayName}'s page on LinkNest`,
-    openGraph: {
-      title: profile.seoTitle || profile.displayName,
-      description: profile.seoDescription || profile.bio || undefined,
-      images: profile.ogImage || profile.avatar || undefined,
-      type: "profile",
-    },
-  };
-}
-
-export default async function BioPage({
-  params,
-}: {
-  params: Promise<{ username: string }>;
-}) {
-  const { username } = await params;
-  const profile = await prisma.profile.findFirst({
+// Shared by generateMetadata, generateViewport and the page so the profile
+// is only fetched once per request.
+const getPublicProfile = cache((username: string) =>
+  prisma.profile.findFirst({
     where: { username, published: true, visibility: "public", deletedAt: null },
     include: {
       socials: { where: { url: { not: "" } }, orderBy: { order: "asc" } },
@@ -65,12 +37,73 @@ export default async function BioPage({
         },
       },
     },
-  });
+  }),
+);
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}): Promise<Metadata> {
+  const { username } = await params;
+  const profile = await getPublicProfile(username);
+  if (!profile) return { title: "Profile not found" };
+
+  const title = profile.seoTitle || profile.displayName;
+  const description = truncate(
+    profile.seoDescription ||
+      profile.bio ||
+      `${profile.displayName}'s page on ${SITE_NAME}`,
+  );
+  const url = absoluteUrl(`/u/${encodeURIComponent(profile.username)}`);
+  const images = [
+    profile.ogImage || profile.avatar || DEFAULT_OG_IMAGE,
+  ].filter(Boolean) as string[];
+
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      ...siteMetadata.openGraph,
+      type: "profile",
+      url,
+      title,
+      description,
+      images,
+    },
+    twitter: {
+      ...siteMetadata.twitter,
+      title,
+      description,
+      images,
+    },
+  };
+}
+
+export async function generateViewport({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}): Promise<Viewport> {
+  const { username } = await params;
+  const profile = await getPublicProfile(username);
+  if (!profile) return {};
+  const theme = toTheme(profile.appearance as Record<string, unknown> | null);
+  return { themeColor: theme.backgroundColor };
+}
+
+export default async function BioPage({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}) {
+  const { username } = await params;
+  const profile = await getPublicProfile(username);
   if (!profile) notFound();
 
   const appearance = (profile.appearance ?? {}) as Record<string, unknown> | null;
   const theme = toTheme(appearance);
-  const canonic = `${APP_URL}/u/${encodeURIComponent(profile.username)}`;
 
   return (
     <main
@@ -78,7 +111,17 @@ export default async function BioPage({
       className="min-h-dvh px-4 py-10 text-foreground"
     >
       <ViewTracker username={profile.username} />
-      <link rel="canonical" href={canonic} />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Person",
+          name: profile.displayName,
+          url: absoluteUrl(`/u/${encodeURIComponent(profile.username)}`),
+          image: profile.avatar ? absoluteUrl(profile.avatar) : undefined,
+          description: profile.bio ?? undefined,
+          sameAs: profile.socials.map((s) => s.url),
+        }}
+      />
 
       <div
         className="mx-auto w-full max-w-md"

@@ -1,7 +1,27 @@
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { PasswordUnlockForm } from "@/components/unlock/password-unlock-form";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const link = await prisma.link.findFirst({
+    where: { slug, deletedAt: null },
+    select: { title: true, description: true },
+  });
+  return {
+    title: link?.title ? `Unlock ${link.title}` : "Unlock link",
+    description:
+      link?.description ??
+      "This link is protected — enter the password to continue.",
+    robots: { index: false, follow: false },
+  };
+}
 
 export default async function UnlockPage({
   params,

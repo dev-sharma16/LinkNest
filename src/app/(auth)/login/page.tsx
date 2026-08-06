@@ -3,10 +3,14 @@ import Link from "next/link";
 import { AuthCard } from "@/components/auth/auth-card";
 import { LoginForm } from "@/components/auth/login-form";
 import { env } from "@/lib/env";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Sign in",
-};
+  description:
+    "Sign in to your LinkNest account to manage smart links, link-in-bio pages, QR codes and click analytics.",
+  path: "/login",
+});
 
 export default function LoginPage() {
   const googleEnabled = Boolean(

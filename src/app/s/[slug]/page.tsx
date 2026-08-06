@@ -1,54 +1,32 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import { prisma } from "@/lib/prisma";
 import { toStorefrontTheme, storefrontVars } from "@/lib/storefront-css";
 import { StorefrontViewTracker } from "@/components/storefronts/public/view-tracker";
 import { ClickableProduct } from "@/components/storefronts/public/clickable-product";
-import { APP_URL } from "@/lib/env";
+import { JsonLd } from "@/components/seo/json-ld";
+import {
+  absoluteUrl,
+  DEFAULT_OG_IMAGE,
+  SITE_NAME,
+  siteMetadata,
+  truncate,
+} from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
-  const { slug } = await params;
-  const storefront = await prisma.storefront.findFirst({
-    where: { slug, published: true, visibility: "public", archived: false, deletedAt: null },
-    select: {
-      name: true,
-      description: true,
-      seoTitle: true,
-      seoDescription: true,
-      ogImage: true,
-      coverImage: true,
+// Shared by generateMetadata, generateViewport and the page so the
+// storefront is only fetched once per request.
+const getPublicStorefront = cache((slug: string) =>
+  prisma.storefront.findFirst({
+    where: {
+      slug,
+      published: true,
+      visibility: "public",
+      archived: false,
+      deletedAt: null,
     },
-  });
-  if (!storefront) return { title: "Storefront not found" };
-  return {
-    title: storefront.seoTitle || storefront.name,
-    description:
-      storefront.seoDescription ||
-      storefront.description ||
-      `${storefront.name} on LinkNest`,
-    openGraph: {
-      title: storefront.seoTitle || storefront.name,
-      description: storefront.seoDescription || storefront.description || undefined,
-      images: storefront.ogImage || storefront.coverImage || undefined,
-      type: "website",
-    },
-  };
-}
-
-export default async function StorefrontPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const storefront = await prisma.storefront.findFirst({
-    where: { slug, published: true, visibility: "public", archived: false, deletedAt: null },
     include: {
       products: {
         where: { deletedAt: null },
@@ -65,18 +43,111 @@ export default async function StorefrontPage({
         },
       },
     },
-  });
+  }),
+);
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const storefront = await getPublicStorefront(slug);
+  if (!storefront) return { title: "Storefront not found" };
+
+  const title = storefront.seoTitle || storefront.name;
+  const description = truncate(
+    storefront.seoDescription ||
+      storefront.description ||
+      `${storefront.name} on ${SITE_NAME}`,
+  );
+  const url = absoluteUrl(`/s/${encodeURIComponent(storefront.slug)}`);
+  const images = [
+    storefront.ogImage || storefront.coverImage || DEFAULT_OG_IMAGE,
+  ].filter(Boolean) as string[];
+
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      ...siteMetadata.openGraph,
+      type: "website",
+      url,
+      title,
+      description,
+      images,
+    },
+    twitter: {
+      ...siteMetadata.twitter,
+      title,
+      description,
+      images,
+    },
+  };
+}
+
+export async function generateViewport({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Viewport> {
+  const { slug } = await params;
+  const storefront = await getPublicStorefront(slug);
+  if (!storefront) return {};
+  const theme = toStorefrontTheme(
+    storefront.appearance as Record<string, unknown> | null,
+  );
+  return { themeColor: theme.backgroundColor };
+}
+
+export default async function StorefrontPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const storefront = await getPublicStorefront(slug);
   if (!storefront) notFound();
 
   const appearance = (storefront.appearance ?? {}) as Record<string, unknown> | null;
   const theme = toStorefrontTheme(appearance);
-  const canonic = `${APP_URL}/s/${encodeURIComponent(storefront.slug)}`;
   const isList = theme.layout === "list";
 
   return (
     <main style={storefrontVars(theme)} className="min-h-dvh text-foreground">
       <StorefrontViewTracker slug={storefront.slug} />
-      <link rel="canonical" href={canonic} />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Store",
+          name: storefront.name,
+          url: absoluteUrl(`/s/${encodeURIComponent(storefront.slug)}`),
+          description: storefront.description ?? undefined,
+          image: storefront.coverImage
+            ? absoluteUrl(storefront.coverImage)
+            : undefined,
+        }}
+      />
+      {storefront.products.length > 0 ? (
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            name: `${storefront.name} products`,
+            itemListElement: storefront.products.map((product, index) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              item: {
+                "@type": "Product",
+                name: product.title,
+                description: product.description ?? undefined,
+                image: product.image ? absoluteUrl(product.image) : undefined,
+              },
+            })),
+          }}
+        />
+      ) : null}
 
       {storefront.bannerImage ? (
         <div className="h-44 w-full sm:h-56">
