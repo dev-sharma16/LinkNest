@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { UserMenu } from "@/components/dashboard/user-menu";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const navItems = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
@@ -95,6 +96,9 @@ export function DashboardShell({
           <NavLinks />
         </div>
         <div className="border-t p-3">
+          <div className="mb-2 flex justify-end">
+            <ThemeToggle />
+          </div>
           <UserMenu userName={userName} userEmail={userEmail} userImage={userImage} />
         </div>
       </aside>
@@ -107,23 +111,29 @@ export function DashboardShell({
           </span>
           <span className="text-base font-semibold tracking-tight">LinkNest</span>
         </Link>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setOpen(true)}
-          aria-label="Open menu"
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setOpen(true)}
+            aria-label="Open menu"
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+        </div>
       </header>
 
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="left" className="w-64 p-0" showCloseButton={false}>
           <div className="flex items-center justify-between pr-2">
             <Brand />
-            <Button variant="ghost" size="icon" onClick={() => setOpen(false)} aria-label="Close menu">
-              <X className="h-5 w-5" />
-            </Button>
+            <div className="flex items-center gap-1">
+              <ThemeToggle />
+              <Button variant="ghost" size="icon" onClick={() => setOpen(false)} aria-label="Close menu">
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
           </div>
           <NavLinks onNavigate={() => setOpen(false)} />
           <div className="mt-4 border-t p-3">
