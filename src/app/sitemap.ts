@@ -8,7 +8,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [profiles, storefronts] = await Promise.all([
     prisma.profile.findMany({
       where: { published: true, visibility: "public", deletedAt: null },
-      select: { username: true, updatedAt: true },
+      select: {
+        username: true,
+        updatedAt: true,
+        avatar: true,
+        ogImage: true,
+      },
     }),
     prisma.storefront.findMany({
       where: {
@@ -17,7 +22,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         archived: false,
         deletedAt: null,
       },
-      select: { slug: true, updatedAt: true },
+      select: {
+        slug: true,
+        updatedAt: true,
+        coverImage: true,
+        ogImage: true,
+      },
     }),
   ]);
 
@@ -43,20 +53,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.2,
     },
     ...profiles.map(
-      (profile): MetadataRoute.Sitemap[number] => ({
-        url: absoluteUrl(`/u/${encodeURIComponent(profile.username)}`),
-        lastModified: profile.updatedAt,
-        changeFrequency: "weekly",
-        priority: 0.7,
-      }),
+      (profile): MetadataRoute.Sitemap[number] => {
+        const images = [profile.ogImage, profile.avatar]
+          .filter((image): image is string => Boolean(image))
+          .map(absoluteUrl);
+        return {
+          url: absoluteUrl(`/u/${encodeURIComponent(profile.username)}`),
+          lastModified: profile.updatedAt,
+          changeFrequency: "weekly",
+          priority: 0.7,
+          ...(images.length > 0 ? { images } : {}),
+        };
+      },
     ),
     ...storefronts.map(
-      (storefront): MetadataRoute.Sitemap[number] => ({
-        url: absoluteUrl(`/s/${encodeURIComponent(storefront.slug)}`),
-        lastModified: storefront.updatedAt,
-        changeFrequency: "weekly",
-        priority: 0.7,
-      }),
+      (storefront): MetadataRoute.Sitemap[number] => {
+        const images = [storefront.ogImage, storefront.coverImage]
+          .filter((image): image is string => Boolean(image))
+          .map(absoluteUrl);
+        return {
+          url: absoluteUrl(`/s/${encodeURIComponent(storefront.slug)}`),
+          lastModified: storefront.updatedAt,
+          changeFrequency: "weekly",
+          priority: 0.7,
+          ...(images.length > 0 ? { images } : {}),
+        };
+      },
     ),
   ];
 }
