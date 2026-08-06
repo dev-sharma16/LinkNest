@@ -3,6 +3,7 @@ import Link from "next/link";
 import { LinkIcon, BarChart3, QrCode, ShieldCheck, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/seo/json-ld";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { getCurrentUser } from "@/lib/session";
 import {
   absoluteUrl,
@@ -89,6 +90,7 @@ export default async function HomePage() {
           <span className="text-lg font-semibold tracking-tight">LinkNest</span>
         </Link>
         <nav className="flex items-center gap-3">
+          <ThemeToggle />
           {user ? (
             <Button nativeButton={false} render={<Link href="/dashboard" />}>
               Go to dashboard
