@@ -2,15 +2,17 @@
 
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Save, RotateCcw, Palette } from "lucide-react";
+import { Save, RotateCcw } from "lucide-react";
 import { fetchJson } from "@/hooks/use-storefronts";
+import { useSavedTemplates, type SavedTemplate } from "@/hooks/use-templates";
+import { TemplatePicker } from "@/components/bio/template-picker";
 import { STOREFRONT_DEFAULT_THEME, STOREFRONT_PRESETS } from "@/lib/storefront-themes";
 import type { StorefrontAppearanceValues } from "@/lib/validations/storefront";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { PhonePreview, TemplateGallery } from "@/components/bio/template-gallery";
+import { PhonePreview } from "@/components/bio/template-gallery";
 import {
   Select,
   SelectContent,
@@ -32,6 +34,7 @@ export function StorefrontAppearanceEditor({
     ...STOREFRONT_DEFAULT_THEME,
     ...(initial ?? {}),
   });
+  const savedTemplates = useSavedTemplates("storefront");
 
   const saveMutation = useMutation({
     mutationFn: (body: StorefrontAppearanceValues) =>
@@ -58,6 +61,62 @@ export function StorefrontAppearanceEditor({
     toast.success("Template applied — fine-tune below");
   }
 
+  function applySavedTemplate(template: SavedTemplate) {
+    setTheme((t) => ({
+      ...t,
+      ...(template.appearance as Partial<StorefrontAppearanceValues>),
+      preset: `saved:${template.id}`,
+    }));
+    toast.success(`"${template.name}" applied — fine-tune below`);
+  }
+
+  function handleSaveAsTemplate(name: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      savedTemplates.create.mutate(
+        { name, appearance: theme as Record<string, unknown> },
+        {
+          onSuccess: () => {
+            toast.success(`"${name}" saved to My templates`);
+            resolve();
+          },
+          onError: (e: Error) => {
+            toast.error(e.message);
+            reject(e);
+          },
+        },
+      );
+    });
+  }
+
+  function handleRenameTemplate(
+    id: string,
+    name: string,
+    appearance?: Record<string, unknown>,
+  ): Promise<void> {
+    return new Promise((resolve, reject) => {
+      savedTemplates.update.mutate(
+        { id, name, appearance },
+        {
+          onSuccess: () => {
+            toast.success("Template updated");
+            resolve();
+          },
+          onError: (e: Error) => {
+            toast.error(e.message);
+            reject(e);
+          },
+        },
+      );
+    });
+  }
+
+  function handleDeleteTemplate(id: string) {
+    savedTemplates.remove.mutate(id, {
+      onSuccess: () => toast.success("Template deleted"),
+      onError: (e: Error) => toast.error(e.message),
+    });
+  }
+
   function set<K extends keyof StorefrontAppearanceValues>(
     key: K,
     value: StorefrontAppearanceValues[K],
@@ -81,19 +140,21 @@ export function StorefrontAppearanceEditor({
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
       <div className="min-w-0 space-y-8">
         <section>
-          <div className="mb-2 flex items-center gap-2">
-            <Palette className="h-4 w-4 text-primary" />
-            <h2 className="text-lg font-semibold">Choose a template</h2>
-          </div>
-          <p className="mb-4 text-sm text-muted-foreground">
-            Pick a starting look, then fine-tune every detail below. Your products are never
-            changed — only the styling.
-          </p>
-          <TemplateGallery
+          <TemplatePicker
             presets={STOREFRONT_PRESETS}
             activeId={theme.preset}
-            onSelect={applyPreset}
+            onSelectPreset={applyPreset}
             variant="storefront"
+            description="Pick a starting look, then fine-tune every detail below. Your products are never changed — only the styling."
+            saveDescription="Save your current look to reuse on any storefront."
+            saved={savedTemplates.list.data ?? []}
+            savedLoading={savedTemplates.list.isLoading}
+            savedSaveBusy={savedTemplates.create.isPending}
+            currentAppearance={theme as Record<string, unknown>}
+            onApplySaved={applySavedTemplate}
+            onRenameSaved={handleRenameTemplate}
+            onDeleteSaved={handleDeleteTemplate}
+            onSaveCurrent={handleSaveAsTemplate}
           />
         </section>
 

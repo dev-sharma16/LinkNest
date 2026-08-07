@@ -1,5 +1,8 @@
 "use client";
 
+// Filter a known dev-only React 19 warning from next-themes (see module).
+import "@/lib/suppress-dev-warnings";
+
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";

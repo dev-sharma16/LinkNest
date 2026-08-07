@@ -22,7 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { toast } from "sonner";
+import { absoluteUrl, copyText } from "@/components/ui/copy-link-button";
 
 type QrData = { dataUrl: string; target: string; size: number };
 
@@ -72,17 +72,14 @@ export function SharePanel({ storefrontId }: { storefrontId: string }) {
 
   const sf = storefront;
 
-  const publicUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/s/${storefront.slug}`;
+  const publicUrl = absoluteUrl(`/s/${storefront.slug}`);
   const published = storefront.published && storefront.visibility === "public";
 
   async function copyLink() {
-    try {
-      await navigator.clipboard.writeText(publicUrl);
+    const ok = await copyText(publicUrl);
+    if (ok) {
       setCopied(true);
-      toast.success("Link copied");
       setTimeout(() => setCopied(false), 2000);
-    } catch {
-      toast.error("Could not copy link");
     }
   }
 
