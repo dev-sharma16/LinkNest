@@ -221,6 +221,39 @@ Users can customize the overall appearance of their page.
 - Theme Preview
 - Save Theme
 
+### Template Gallery
+
+Instead of a flat list of color presets, the Theme tab opens with a **template gallery** of
+10 pre-built layouts. Each template card renders a **live miniature phone preview** built from
+the template's actual CSS variables, so users see exactly what their page will look like before
+committing. Selecting a card applies the template instantly and users can then fine-tune
+everything manually in the editor below it.
+
+#### The 10 templates
+
+| Template | Style |
+| --- | --- |
+| **Minimal** | Clean light theme, indigo accent, solid buttons |
+| **Midnight** | Deep charcoal with indigo/violet highlights |
+| **Sunset** | Warm ember-to-night gradient, pill buttons |
+| **Ocean** | Cool aqua/sky gradient, light theme |
+| **Forest** | Rich pine greens with emerald pop |
+| **Rose** | Soft blush pink, pill buttons |
+| **Neon** | Electric cyan/magenta on deep space black, outline buttons |
+| **Cream** | Warm paper tones, serif type, soft shadows |
+| **Editorial** | Bold black-on-white, sharp corners, serif type |
+| **Aurora** | Twilight violet gradient, dreamy pill buttons |
+
+Each template fully configures colors, typography, background, button style/radius, card
+style, block spacing and alignment.
+
+### Live Preview
+
+The theme editor includes a sticky **live preview pane** that re-renders as the user edits any
+value, and the public page animates blocks in with a subtle rise effect. The public renderer
+now honors `buttonStyle` (solid / outline / ghost) and `cardStyle` (flat / outlined / shadow)
+for buttons and cards.
+
 ---
 
 ## Customization

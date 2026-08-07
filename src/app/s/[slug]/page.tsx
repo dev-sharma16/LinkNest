@@ -164,22 +164,28 @@ export default async function StorefrontPage({
       <div className="mx-auto w-full max-w-4xl px-4 py-10">
         <header style={{ textAlign: theme.alignment }}>
           {storefront.coverImage ? (
-            <img
-              src={storefront.coverImage}
-              alt={storefront.name}
-              width={96}
-              height={96}
-              className="mx-auto rounded-2xl border object-cover shadow-sm"
-            />
+            <div style={{ animation: "bio-rise 0.5s ease-out both" }}>
+              <img
+                src={storefront.coverImage}
+                alt={storefront.name}
+                width={96}
+                height={96}
+                className="mx-auto rounded-2xl border object-cover transition-transform duration-300 hover:scale-105"
+                style={{
+                  borderColor: "color-mix(in srgb, var(--sf-primary) 40%, transparent)",
+                  boxShadow: "0 0 0 4px color-mix(in srgb, var(--sf-primary) 14%, transparent), 0 10px 30px rgba(0,0,0,0.12)",
+                }}
+              />
+            </div>
           ) : null}
           <h1
             className="mt-4 text-3xl font-bold tracking-tight"
-            style={{ fontSize: "calc(var(--sf-font-size) + 10px)" }}
+            style={{ fontSize: "calc(var(--sf-font-size) + 10px)", animation: "bio-rise 0.5s ease-out 0.08s both" }}
           >
             {storefront.name}
           </h1>
           {storefront.description ? (
-            <p className="mx-auto mt-2 max-w-xl text-base opacity-80">
+            <p className="mx-auto mt-2 max-w-xl text-base opacity-80" style={{ animation: "bio-rise 0.5s ease-out 0.16s both" }}>
               {storefront.description}
             </p>
           ) : null}
@@ -237,9 +243,24 @@ function ProductView({
   theme: ReturnType<typeof toStorefrontTheme>;
   list: boolean;
 }) {
-  const cardClass = `flex h-full flex-col overflow-hidden rounded-[--sf-card-radius] bg-card ring-1 ring-foreground/10 ${
-    list ? "sm:flex-row" : ""
-  }`;
+  const cardStyle =
+    theme.cardStyle === "outlined"
+      ? {
+          background: "color-mix(in srgb, var(--sf-text) 4%, transparent)",
+          border: "1px solid color-mix(in srgb, var(--sf-text) 18%, transparent)",
+          boxShadow: "none",
+        }
+      : theme.cardStyle === "flat"
+        ? {
+            background: "transparent",
+            border: "1px solid color-mix(in srgb, var(--sf-text) 10%, transparent)",
+            boxShadow: "none",
+          }
+        : {
+            background: "color-mix(in srgb, var(--sf-text) 6%, transparent)",
+            border: "1px solid color-mix(in srgb, var(--sf-text) 10%, transparent)",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+          };
   const shadow = {
     none: "",
     sm: "shadow-sm",
@@ -247,10 +268,32 @@ function ProductView({
     lg: "shadow-lg",
   }[theme.cardShadow];
 
+  const btnStyle =
+    theme.buttonStyle === "outline"
+      ? {
+          background: "transparent",
+          color: "var(--sf-btn-bg)",
+          border: `2px solid var(--sf-btn-bg)`,
+        }
+      : theme.buttonStyle === "ghost"
+        ? {
+            background: "transparent",
+            color: "var(--sf-btn-bg)",
+            border: "none",
+          }
+        : {
+            background: "var(--sf-btn-bg)",
+            color: "var(--sf-btn-text)",
+            border: "none",
+          };
+
   const ctaText = product.ctaText || "Visit website";
 
   return (
-    <div className={`${cardClass} ${shadow}`}>
+    <div
+      className={`flex h-full flex-col overflow-hidden rounded-[--sf-card-radius] transition-all duration-200 hover:-translate-y-1 ${shadow}`}
+      style={{ ...cardStyle, animation: "bio-rise 0.5s ease-out both" }}
+    >
       {product.image ? (
         <img
           src={product.image}
@@ -279,10 +322,9 @@ function ProductView({
           slug={slug}
           productId={product.id}
           href={product.url}
-          className="mt-4 inline-block w-full rounded-[--sf-btn-radius] px-4 py-2.5 text-center text-sm font-semibold transition-opacity hover:opacity-90"
+          className="mt-4 inline-block w-full rounded-[--sf-btn-radius] px-4 py-2.5 text-center text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:opacity-90 hover:shadow-lg"
           style={{
-            background: "var(--sf-btn-bg)",
-            color: "var(--sf-btn-text)",
+            ...btnStyle,
             borderRadius: "var(--sf-btn-radius)",
           }}
         >

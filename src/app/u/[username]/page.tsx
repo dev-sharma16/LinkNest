@@ -128,29 +128,52 @@ export default async function BioPage({
         style={{ textAlign: theme.alignment }}
       >
         {profile.avatar ? (
-          <img
-            src={profile.avatar}
-            alt={profile.displayName}
-            width={96}
-            height={96}
-            className="mx-auto rounded-full border object-cover shadow-sm"
-          />
+          <div className="bio-animate" style={{ animation: "bio-rise 0.5s ease-out both" }}>
+            <img
+              src={profile.avatar}
+              alt={profile.displayName}
+              width={104}
+              height={104}
+              className="mx-auto rounded-full border object-cover transition-transform duration-300 hover:scale-105"
+              style={{
+                borderColor: "color-mix(in srgb, var(--bio-primary) 40%, transparent)",
+                boxShadow: "0 0 0 4px color-mix(in srgb, var(--bio-primary) 14%, transparent), 0 10px 30px rgba(0,0,0,0.12)",
+              }}
+            />
+          </div>
         ) : null}
 
         <h1
-          className="mt-4 text-2xl font-bold tracking-tight"
-          style={{ fontSize: "calc(var(--bio-font-size) + 6px)" }}
+          className="bio-animate mt-4 text-2xl font-bold tracking-tight"
+          style={{
+            fontSize: "calc(var(--bio-font-size) + 6px)",
+            animation: "bio-rise 0.5s ease-out 0.08s both",
+          }}
         >
           {profile.displayName}
-          {profile.verified ? " ✓" : ""}
+          {profile.verified ? (
+            <span
+              className="ml-1 inline-flex items-center justify-center"
+              title="Verified"
+              style={{ color: "var(--bio-primary)" }}
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current" aria-label="Verified">
+                <path d="M12 1.5l2.4 2.4 3.4-.5 1 3.3 3.2 1.3-1 3.4 1.9 2.9-2.6 2.2.4 3.4-3.4.7-1.7 3-3.1-1.4-2.6 2L9.6 21l-3.4-.7-.4-3.4L3.2 14.9l1-3.4L1 10.2l1.3-3.2 3.3-1 .6-3.4 3.4.5L12 1.5z" />
+              </svg>
+            </span>
+          ) : null}
         </h1>
 
         {profile.bio ? (
-          <p className="mt-2 text-base opacity-80">{profile.bio}</p>
+          <p className="bio-animate mt-2 text-base opacity-80" style={{ animation: "bio-rise 0.5s ease-out 0.16s both" }}>
+            {profile.bio}
+          </p>
         ) : null}
 
         {profile.location ? (
-          <p className="mt-1 text-sm opacity-60">{profile.location}</p>
+          <p className="bio-animate mt-1 text-sm opacity-60" style={{ animation: "bio-rise 0.5s ease-out 0.2s both" }}>
+            {profile.location}
+          </p>
         ) : null}
 
         {profile.website ? (
@@ -162,7 +185,8 @@ export default async function BioPage({
             }
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-1 inline-block text-sm underline opacity-70"
+            className="bio-animate mt-1 inline-block text-sm underline opacity-70 transition-opacity hover:opacity-100"
+            style={{ animation: "bio-rise 0.5s ease-out 0.24s both" }}
           >
             {profile.website.replace(/^https?:\/\//, "")}
           </a>
@@ -170,8 +194,8 @@ export default async function BioPage({
 
         {profile.socials.length > 0 ? (
           <div
-            className="mt-4 flex flex-wrap items-center justify-center gap-2"
-            style={{ justifyContent: theme.alignment === "center" ? "center" : theme.alignment }}
+            className="bio-animate mt-4 flex flex-wrap items-center justify-center gap-2"
+            style={{ justifyContent: theme.alignment === "center" ? "center" : theme.alignment, animation: "bio-rise 0.5s ease-out 0.28s both" }}
           >
             {profile.socials.map((s) => (
               <SocialBadge key={s.id} platform={s.platform} url={s.url} username={profile.username} socialId={s.id} />
@@ -205,7 +229,11 @@ function SocialBadge({
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/10 text-sm font-medium capitalize transition-opacity hover:opacity-80"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold capitalize transition-all duration-200 hover:-translate-y-0.5 hover:scale-105"
+      style={{
+        background: "color-mix(in srgb, var(--bio-text) 10%, transparent)",
+        color: "var(--bio-text)",
+      }}
       aria-label={platform}
     >
       {platform === "twitter" ? "X" : platform.slice(0, 2).toUpperCase()}
