@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { StorefrontFormDialog } from "@/components/storefronts/storefront-form";
 import { ProductEditor } from "@/components/storefronts/product-editor";
 import { StorefrontAppearanceEditor } from "@/components/storefronts/storefront-appearance-editor";
+import { CopyLinkButton } from "@/components/ui/copy-link-button";
 import { toast } from "sonner";
 
 export function StorefrontEditor({ storefrontId }: { storefrontId: string }) {
@@ -69,10 +70,13 @@ export function StorefrontEditor({ storefrontId }: { storefrontId: string }) {
             {storefront.published ? "Published" : "Draft"}
           </label>
           {publicUrl && (
-            <Button variant="outline" nativeButton={false} render={<Link href={publicUrl} target="_blank" />}>
-              <ExternalLink className="mr-2 h-4 w-4" />
-              View page
-            </Button>
+            <>
+              <Button variant="outline" nativeButton={false} render={<Link href={publicUrl} target="_blank" />}>
+                <ExternalLink className="mr-2 h-4 w-4" />
+                View page
+              </Button>
+              <CopyLinkButton path={publicUrl} />
+            </>
           )}
           {publishMutation.isPending && (
             <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />

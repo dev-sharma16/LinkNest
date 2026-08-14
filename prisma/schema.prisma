@@ -34,6 +34,7 @@ model User {
   bioEvents     BioEvent[]
   leads         Lead[]
   storefronts   Storefront[]
+  savedTemplates SavedTemplate[]
 
   @@unique([email])
   @@map("users")
@@ -371,6 +372,25 @@ model Lead {
   @@index([profileId])
   @@index([type])
   @@map("leads")
+}
+
+// ============================================================
+// Saved templates (user-created themes for bio pages & storefronts)
+// ============================================================
+
+model SavedTemplate {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  type       String // "bio" | "storefront"
+  appearance Json
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, name, type])
+  @@index([userId, type])
+  @@map("saved_templates")
 }
 
 // ============================================================

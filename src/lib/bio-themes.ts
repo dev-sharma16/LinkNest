@@ -3,6 +3,7 @@ import type { ThemeStyleValues } from "@/lib/validations/bio";
 export type ThemePreset = {
   id: string;
   name: string;
+  description: string;
   style: Pick<
     ThemeStyleValues,
     | "themeName"
@@ -17,8 +18,13 @@ export type ThemePreset = {
     | "gradientFrom"
     | "gradientTo"
     | "fontFamily"
+    | "fontSize"
+    | "fontWeight"
     | "buttonStyle"
     | "buttonRadius"
+    | "cardStyle"
+    | "blockSpacing"
+    | "alignment"
   >;
 };
 
@@ -26,6 +32,7 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: "minimal",
     name: "Minimal",
+    description: "Clean, light and airy with a subtle indigo accent.",
     style: {
       themeName: "light",
       primaryColor: "#6366f1",
@@ -39,13 +46,19 @@ export const THEME_PRESETS: ThemePreset[] = [
       gradientFrom: "#ffffff",
       gradientTo: "#ffffff",
       fontFamily: "Inter, sans-serif",
+      fontSize: "16px",
+      fontWeight: "500",
       buttonStyle: "solid",
       buttonRadius: "12px",
+      cardStyle: "shadow",
+      blockSpacing: "12px",
+      alignment: "center",
     },
   },
   {
     id: "midnight",
     name: "Midnight",
+    description: "Deep charcoal with soft indigo and violet highlights.",
     style: {
       themeName: "dark",
       primaryColor: "#818cf8",
@@ -59,13 +72,19 @@ export const THEME_PRESETS: ThemePreset[] = [
       gradientFrom: "#09090b",
       gradientTo: "#09090b",
       fontFamily: "Inter, sans-serif",
+      fontSize: "16px",
+      fontWeight: "500",
       buttonStyle: "solid",
       buttonRadius: "12px",
+      cardStyle: "shadow",
+      blockSpacing: "12px",
+      alignment: "center",
     },
   },
   {
     id: "sunset",
     name: "Sunset",
+    description: "Warm ember-to-night gradient with pill-shaped buttons.",
     style: {
       themeName: "dark",
       primaryColor: "#fb923c",
@@ -79,13 +98,19 @@ export const THEME_PRESETS: ThemePreset[] = [
       gradientFrom: "#7c2d12",
       gradientTo: "#0c0a09",
       fontFamily: "Inter, sans-serif",
+      fontSize: "16px",
+      fontWeight: "600",
       buttonStyle: "solid",
       buttonRadius: "9999px",
+      cardStyle: "shadow",
+      blockSpacing: "14px",
+      alignment: "center",
     },
   },
   {
     id: "ocean",
     name: "Ocean",
+    description: "Cool aqua and sky tones over a breezy gradient.",
     style: {
       themeName: "light",
       primaryColor: "#0ea5e9",
@@ -99,13 +124,19 @@ export const THEME_PRESETS: ThemePreset[] = [
       gradientFrom: "#e0f2fe",
       gradientTo: "#f0f9ff",
       fontFamily: "Inter, sans-serif",
+      fontSize: "16px",
+      fontWeight: "500",
       buttonStyle: "solid",
       buttonRadius: "12px",
+      cardStyle: "shadow",
+      blockSpacing: "12px",
+      alignment: "center",
     },
   },
   {
     id: "forest",
     name: "Forest",
+    description: "Rich pine greens with a fresh emerald pop.",
     style: {
       themeName: "dark",
       primaryColor: "#22c55e",
@@ -119,13 +150,19 @@ export const THEME_PRESETS: ThemePreset[] = [
       gradientFrom: "#052e16",
       gradientTo: "#052e16",
       fontFamily: "Inter, sans-serif",
+      fontSize: "16px",
+      fontWeight: "500",
       buttonStyle: "solid",
       buttonRadius: "12px",
+      cardStyle: "shadow",
+      blockSpacing: "12px",
+      alignment: "center",
     },
   },
   {
     id: "rose",
     name: "Rose",
+    description: "Soft blush pink with playful pill-shaped buttons.",
     style: {
       themeName: "light",
       primaryColor: "#e11d48",
@@ -139,8 +176,117 @@ export const THEME_PRESETS: ThemePreset[] = [
       gradientFrom: "#ffe4e6",
       gradientTo: "#fff1f2",
       fontFamily: "Inter, sans-serif",
+      fontSize: "16px",
+      fontWeight: "600",
       buttonStyle: "solid",
       buttonRadius: "9999px",
+      cardStyle: "shadow",
+      blockSpacing: "12px",
+      alignment: "center",
+    },
+  },
+  {
+    id: "neon",
+    name: "Neon",
+    description: "Electric cyan and magenta glow on deep space black.",
+    style: {
+      themeName: "dark",
+      primaryColor: "#22d3ee",
+      secondaryColor: "#e879f9",
+      accentColor: "#a3e635",
+      textColor: "#e2e8f0",
+      backgroundColor: "#020617",
+      buttonBackground: "#22d3ee",
+      buttonText: "#020617",
+      backgroundType: "gradient",
+      gradientFrom: "#0f172a",
+      gradientTo: "#020617",
+      fontFamily: "Space Grotesk, Inter, sans-serif",
+      fontSize: "16px",
+      fontWeight: "600",
+      buttonStyle: "outline",
+      buttonRadius: "10px",
+      cardStyle: "flat",
+      blockSpacing: "12px",
+      alignment: "center",
+    },
+  },
+  {
+    id: "cream",
+    name: "Cream",
+    description: "Warm paper tones, serif type and soft shadows.",
+    style: {
+      themeName: "light",
+      primaryColor: "#b45309",
+      secondaryColor: "#ea580c",
+      accentColor: "#a16207",
+      textColor: "#292524",
+      backgroundColor: "#fdf6ec",
+      buttonBackground: "#1c1917",
+      buttonText: "#fafaf9",
+      backgroundType: "solid",
+      gradientFrom: "#fdf6ec",
+      gradientTo: "#fdf6ec",
+      fontFamily: "Lora, Georgia, serif",
+      fontSize: "17px",
+      fontWeight: "500",
+      buttonStyle: "solid",
+      buttonRadius: "8px",
+      cardStyle: "shadow",
+      blockSpacing: "14px",
+      alignment: "center",
+    },
+  },
+  {
+    id: "editorial",
+    name: "Editorial",
+    description: "Bold black-on-white with sharp corners and serif type.",
+    style: {
+      themeName: "light",
+      primaryColor: "#000000",
+      secondaryColor: "#525252",
+      accentColor: "#a3a3a3",
+      textColor: "#171717",
+      backgroundColor: "#fafafa",
+      buttonBackground: "#171717",
+      buttonText: "#fafafa",
+      backgroundType: "solid",
+      gradientFrom: "#fafafa",
+      gradientTo: "#fafafa",
+      fontFamily: "Playfair Display, Georgia, serif",
+      fontSize: "16px",
+      fontWeight: "500",
+      buttonStyle: "solid",
+      buttonRadius: "0px",
+      cardStyle: "outlined",
+      blockSpacing: "12px",
+      alignment: "left",
+    },
+  },
+  {
+    id: "aurora",
+    name: "Aurora",
+    description: "Twilight violet gradient with dreamy pill buttons.",
+    style: {
+      themeName: "dark",
+      primaryColor: "#a78bfa",
+      secondaryColor: "#f472b6",
+      accentColor: "#67e8f9",
+      textColor: "#f5f3ff",
+      backgroundColor: "#1e1b4b",
+      buttonBackground: "#8b5cf6",
+      buttonText: "#ffffff",
+      backgroundType: "gradient",
+      gradientFrom: "#4c1d95",
+      gradientTo: "#1e1b4b",
+      fontFamily: "Inter, sans-serif",
+      fontSize: "16px",
+      fontWeight: "500",
+      buttonStyle: "solid",
+      buttonRadius: "9999px",
+      cardStyle: "shadow",
+      blockSpacing: "12px",
+      alignment: "center",
     },
   },
 ];

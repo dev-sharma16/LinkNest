@@ -16,6 +16,7 @@ import { BlockEditor } from "@/components/bio/block-editor";
 import { SocialLinksEditor } from "@/components/bio/social-links-editor";
 import { ThemeEditor } from "@/components/bio/theme-editor";
 import { UploadButton } from "@/components/bio/upload-button";
+import { CopyLinkButton } from "@/components/ui/copy-link-button";
 import { toast } from "sonner";
 
 export function BioEditor() {
@@ -65,10 +66,13 @@ export function BioEditor() {
             {profile.published ? "Published" : "Draft"}
           </label>
           {publicUrl && (
-            <Button variant="outline" nativeButton={false} render={<Link href={publicUrl} target="_blank" />}>
-              <ExternalLink className="mr-2 h-4 w-4" />
-              View page
-            </Button>
+            <>
+              <Button variant="outline" nativeButton={false} render={<Link href={publicUrl} target="_blank" />}>
+                <ExternalLink className="mr-2 h-4 w-4" />
+                View page
+              </Button>
+              <CopyLinkButton path={publicUrl} />
+            </>
           )}
         </div>
       </div>

@@ -14,6 +14,7 @@ import {
   BarChart3,
   MoreHorizontal,
   Loader2,
+  Link2,
   Settings2,
 } from "lucide-react";
 import { fetchJson, useStorefronts, type StorefrontItem } from "@/hooks/use-storefronts";
@@ -38,6 +39,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { StorefrontFormDialog } from "@/components/storefronts/storefront-form";
+import { absoluteUrl, copyText } from "@/components/ui/copy-link-button";
 import { toast } from "sonner";
 
 export function StorefrontsDashboard() {
@@ -248,10 +250,18 @@ function StorefrontGrid({
                     Analytics
                   </DropdownMenuItem>
                   {s.published ? (
-                    <DropdownMenuItem render={<Link href={`/s/${s.slug}`} target="_blank" />}>
-                      <ExternalLink className="mr-2 h-4 w-4" />
-                      View page
-                    </DropdownMenuItem>
+                    <>
+                      <DropdownMenuItem render={<Link href={`/s/${s.slug}`} target="_blank" />}>
+                        <ExternalLink className="mr-2 h-4 w-4" />
+                        View page
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => void copyText(absoluteUrl(`/s/${s.slug}`))}
+                      >
+                        <Link2 className="mr-2 h-4 w-4" />
+                        Copy link
+                      </DropdownMenuItem>
+                    </>
                   ) : null}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem disabled={busy} onClick={() => onDuplicate(s.id)}>

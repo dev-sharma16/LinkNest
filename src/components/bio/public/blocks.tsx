@@ -1,6 +1,7 @@
 import { getEmbedSrc, toTheme } from "@/lib/bio-css";
 import type { CSSProperties } from "react";
 import type { BioBlock } from "@/hooks/use-bio";
+import type { ThemeStyleValues } from "@/lib/validations/bio";
 import { ClickableLink } from "@/components/bio/public/clickable-link";
 import { ContactFormBlock } from "@/components/bio/public/contact-form-block";
 import { NewsletterFormBlock } from "@/components/bio/public/newsletter-form-block";
@@ -22,11 +23,63 @@ export function BlockRenderer({
     >
       {blocks
         .filter(isVisible)
-        .map((block) => (
-          <BlockView key={block.id} block={block} username={username} theme={theme} />
+        .map((block, index) => (
+          <BlockView
+            key={block.id}
+            block={block}
+            username={username}
+            theme={t}
+            index={index}
+          />
         ))}
     </div>
   );
+}
+
+/** Button background/border/text for the configured buttonStyle. */
+function buttonColors(t: ThemeStyleValues): CSSProperties {
+  if (t.buttonStyle === "outline") {
+    return {
+      background: "transparent",
+      color: "var(--bio-btn-bg)",
+      border: "2px solid var(--bio-btn-bg)",
+    };
+  }
+  if (t.buttonStyle === "ghost") {
+    return {
+      background: "transparent",
+      color: "var(--bio-btn-bg)",
+      border: "none",
+    };
+  }
+  return {
+    background: "var(--bio-btn-bg)",
+    color: "var(--bio-btn-text)",
+    border: "none",
+  };
+}
+
+/** Card surface for the configured cardStyle. */
+function cardColors(t: ThemeStyleValues): CSSProperties {
+  if (t.cardStyle === "outlined") {
+    return {
+      background: "color-mix(in srgb, var(--bio-text) 4%, transparent)",
+      border: "1px solid color-mix(in srgb, var(--bio-text) 18%, transparent)",
+      boxShadow: "none",
+    };
+  }
+  if (t.cardStyle === "flat") {
+    return {
+      background: "transparent",
+      border: "none",
+      boxShadow: "none",
+    };
+  }
+  return {
+    background: "color-mix(in srgb, var(--bio-text) 6%, transparent)",
+    border: "1px solid color-mix(in srgb, var(--bio-text) 10%, transparent)",
+    boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+  };
 }
 
 function isVisible(block: BioBlock): boolean {
@@ -43,14 +96,20 @@ function BlockView({
   block,
   username,
   theme,
+  index,
 }: {
   block: BioBlock;
   username: string;
-  theme: Record<string, unknown> | null;
+  theme: ThemeStyleValues;
+  index: number;
 }) {
   const config = (block.config ?? {}) as Record<string, unknown>;
   const label = String(config.label ?? config.title ?? "");
   const url = String(config.url ?? "");
+  const entrance = {
+    animation: "bio-rise 0.5s ease-out both",
+    animationDelay: `${Math.min(index * 60, 480)}ms`,
+  } as CSSProperties;
 
   switch (block.type) {
     case "link":
@@ -59,7 +118,8 @@ function BlockView({
           username={username}
           blockId={block.id}
           href={url}
-          className="text-center text-base underline underline-offset-4"
+          className="text-center text-base underline underline-offset-4 transition-opacity hover:opacity-70"
+          style={entrance}
         >
           {label || url}
         </ClickableLink>
@@ -71,11 +131,11 @@ function BlockView({
           username={username}
           blockId={block.id}
           href={url}
-          className="inline-block w-full rounded-2xl px-4 py-3 text-center text-base font-semibold transition-opacity hover:opacity-90"
+          className="group inline-block w-full px-4 py-3 text-center text-base font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:opacity-90 hover:shadow-lg"
           style={{
-            background: "var(--bio-btn-bg)",
-            color: "var(--bio-btn-text)",
+            ...buttonColors(theme),
             borderRadius: "var(--bio-btn-radius)",
+            ...entrance,
           }}
         >
           {label}
@@ -84,7 +144,10 @@ function BlockView({
 
     case "text":
       return (
-        <p style={{ textAlign: "var(--bio-align)" } as unknown as CSSProperties} className="text-base leading-relaxed">
+        <p
+          style={{ textAlign: "var(--bio-align)" as never, ...entrance }}
+          className="text-base leading-relaxed"
+        >
           {String(config.content ?? "")}
         </p>
       );
@@ -94,7 +157,10 @@ function BlockView({
       const level = (config.level ?? "h2") as "h1" | "h2" | "h3" | "h4";
       const Tag = level;
       return (
-        <Tag style={{ textAlign: "var(--bio-align)" } as unknown as CSSProperties} className="font-bold">
+        <Tag
+          style={{ textAlign: "var(--bio-align)" as never, ...entrance }}
+          className="font-bold"
+        >
           {content}
         </Tag>
       );
@@ -104,7 +170,11 @@ function BlockView({
       return (
         <hr
           className="my-2 border-0"
-          style={{ borderTopWidth: 1, borderColor: (config.color || "rgba(0,0,0,0.15)") as CSSProperties["borderColor"] }}
+          style={{
+            borderTopWidth: 1,
+            borderColor: (config.color ||
+              "color-mix(in srgb, var(--bio-text) 20%, transparent)") as CSSProperties["borderColor"],
+          }}
         />
       );
 
@@ -113,7 +183,7 @@ function BlockView({
 
     case "image":
       return (
-        <figure>
+        <figure style={entrance}>
           <img
             src={String(config.src ?? "")}
             alt={String(config.alt ?? "")}
@@ -129,7 +199,7 @@ function BlockView({
 
     case "gallery":
       return (
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2" style={entrance}>
           {((config.images as string[]) ?? []).map((src, i) => (
             <img key={i} src={src} alt="" className="aspect-square w-full rounded-lg object-cover" />
           ))}
@@ -138,14 +208,14 @@ function BlockView({
 
     case "video":
       return (
-        <video controls className="w-full rounded-xl" poster={String(config.poster ?? "")}>
+        <video controls className="w-full rounded-xl" poster={String(config.poster ?? "")} style={entrance}>
           <source src={String(config.src ?? "")} />
         </video>
       );
 
     case "audio":
       return (
-        <audio controls className="w-full">
+        <audio controls className="w-full" style={entrance}>
           <source src={String(config.src ?? "")} />
         </audio>
       );
@@ -156,7 +226,12 @@ function BlockView({
           username={username}
           blockId={block.id}
           href={url}
-          className="inline-block w-full rounded-2xl bg-stone-900 px-4 py-3 text-center text-base font-semibold text-white hover:opacity-90"
+          className="inline-block w-full px-4 py-3 text-center text-base font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:opacity-90 hover:shadow-lg"
+          style={{
+            ...buttonColors(theme),
+            borderRadius: "var(--bio-btn-radius)",
+            ...entrance,
+          }}
         >
           {label || "Download"}
         </ClickableLink>
@@ -172,10 +247,11 @@ function BlockView({
           username={username}
           blockId={block.id}
           href={storeHref}
-          className="flex items-center gap-3 overflow-hidden rounded-2xl border px-4 py-3 text-left"
+          className="flex items-center gap-3 overflow-hidden rounded-2xl px-4 py-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
           style={{
-            background: "var(--bio-card, #ffffff)",
-            borderColor: "rgba(0,0,0,0.1)",
+            ...cardColors(theme),
+            borderRadius: "var(--bio-btn-radius)",
+            ...entrance,
           }}
         >
           {coverImage ? (
@@ -201,7 +277,7 @@ function BlockView({
           title="PDF"
           src={url}
           className="w-full rounded-xl border"
-          style={{ height: Number(config.height ?? 500) }}
+          style={{ height: Number(config.height ?? 500), ...entrance }}
         />
       );
 
@@ -214,9 +290,9 @@ function BlockView({
           username={username}
           title={String(config.title ?? "Contact me")}
           success={String(config.success ?? "Thanks!")}
-          themeName={theme?.themeName === "dark" ? "dark" : "light"}
-          primary={String(theme?.primaryColor ?? "#000")}
-          text={String(theme?.textColor ?? "#000")}
+          themeName={theme.themeName}
+          primary={theme.primaryColor}
+          text={theme.textColor}
         />
       );
 
@@ -248,6 +324,7 @@ function BlockView({
               block.type === "custom_embed"
                 ? Number(config.height ?? 300)
                 : undefined,
+            ...entrance,
           }}
         >
           <iframe
