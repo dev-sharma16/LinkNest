@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Source_Serif_4 } from "next/font/google";
+import { Inter, Cormorant_Garamond, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
@@ -12,15 +12,20 @@ import {
 } from "@/lib/seo";
 
 const inter = Inter({
-  variable: "--font-inter",
+  variable: "--font-sans",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
 });
 
-const sourceSerif = Source_Serif_4({
+const cormorant = Cormorant_Garamond({
   variable: "--font-serif",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const jetbrains = JetBrains_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -49,7 +54,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   // Light default; the ThemeToggle syncs this to dark when a dark theme is active.
-  themeColor: "#ffffff",
+  themeColor: "#faf9f5",
 };
 
 export default function RootLayout({
@@ -61,7 +66,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${inter.variable} ${sourceSerif.variable} h-full antialiased`}
+      className={`${inter.variable} ${cormorant.variable} ${jetbrains.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <Providers>{children}</Providers>

@@ -31,7 +31,7 @@ export function themeVars(theme: ThemeStyleValues): CSSProperties {
     "--bio-btn-bg": theme.buttonBackground,
     "--bio-btn-text": theme.buttonText,
     "--bio-btn-radius": theme.buttonRadius,
-    "--bio-card-radius": "24px",
+    "--bio-card-radius": "12px",
     "--bio-spacing": theme.blockSpacing,
     "--bio-font-size": theme.fontSize,
     "--bio-font-weight": theme.fontWeight,
