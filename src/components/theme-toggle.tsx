@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const THEME_COLORS: Record<string, string> = {
-  light: "#ffffff",
-  dark: "#0a0a0a",
+  light: "#faf9fb",
+  dark: "#2a222b",
 };
 
 /**
