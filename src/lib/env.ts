@@ -12,6 +12,13 @@ const envSchema = z.object({
   IMAGEKIT_PUBLIC_KEY: z.string().optional(),
   IMAGEKIT_PRIVATE_KEY: z.string().optional(),
   IMAGEKIT_URL_ENDPOINT: z.string().optional(),
+  REDIS_URL: z.string().url().optional().or(z.literal("")),
+  INSTAGRAM_ADAPTER: z.enum(["simulated", "meta"]).default("simulated"),
+  INSTAGRAM_APP_ID: z.string().optional(),
+  INSTAGRAM_APP_SECRET: z.string().optional(),
+  INSTAGRAM_VERIFY_TOKEN: z.string().optional(),
+  INSTAGRAM_WEBHOOK_SECRET: z.string().optional(),
+  INSTAGRAM_ACCESS_TOKEN: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);

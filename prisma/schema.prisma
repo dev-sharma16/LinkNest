@@ -20,21 +20,23 @@ model User {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  sessions      Session[]
-  accounts      Account[]
-  folders       Folder[]
-  links         Link[]
-  tags          Tag[]
-  favorites     Favorite[]
-  customDomains CustomDomain[]
-  utmTemplates  UTMTemplate[]
-  profile       Profile?
-  socialLinks   SocialLink[]
-  bioBlocks     BioBlock[]
-  bioEvents     BioEvent[]
-  leads         Lead[]
-  storefronts   Storefront[]
-  savedTemplates SavedTemplate[]
+  sessions           Session[]
+  accounts           Account[]
+  folders            Folder[]
+  links              Link[]
+  tags               Tag[]
+  favorites          Favorite[]
+  customDomains      CustomDomain[]
+  utmTemplates       UTMTemplate[]
+  profile            Profile?
+  socialLinks        SocialLink[]
+  bioBlocks          BioBlock[]
+  bioEvents          BioEvent[]
+  leads              Lead[]
+  storefronts        Storefront[]
+  savedTemplates     SavedTemplate[]
+  socialAccounts     SocialAccount[]
+  commentAutomations CommentAutomation[]
 
   @@unique([email])
   @@map("users")
@@ -453,11 +455,11 @@ model ProductCard {
 }
 
 model StorefrontEvent {
-  id           String        @id @default(uuid()) @db.Uuid
-  storefrontId String        @db.Uuid
-  storefront   Storefront    @relation(fields: [storefrontId], references: [id], onDelete: Cascade)
-  productId    String?       @db.Uuid
-  product      ProductCard?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+  id           String       @id @default(uuid()) @db.Uuid
+  storefrontId String       @db.Uuid
+  storefront   Storefront   @relation(fields: [storefrontId], references: [id], onDelete: Cascade)
+  productId    String?      @db.Uuid
+  product      ProductCard? @relation(fields: [productId], references: [id], onDelete: SetNull)
   eventType    String
   ipHash       String?
   country      String?
@@ -467,11 +469,106 @@ model StorefrontEvent {
   device       String?
   referrer     String?
   language     String?
-  createdAt    DateTime      @default(now())
+  createdAt    DateTime     @default(now())
 
   @@index([storefrontId])
   @@index([productId])
   @@index([eventType])
   @@index([createdAt])
   @@map("storefront_events")
+}
+
+// ============================================================
+// LinkNest domain schema (Phase 5 - Comment Automation)
+// ============================================================
+
+model SocialAccount {
+  id             String    @id @default(uuid()) @db.Uuid
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  platform       String    @default("instagram")
+  platformUserId String
+  username       String
+  displayName    String?
+  accessToken    String
+  refreshToken   String?
+  tokenExpiresAt DateTime?
+  scope          String?
+  status         String    @default("connected")
+  email          String?
+  avatar         String?
+
+  automations CommentAutomation[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@unique([platform, platformUserId])
+  @@index([userId])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("social_accounts")
+}
+
+model CommentAutomation {
+  id              String        @id @default(uuid()) @db.Uuid
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  socialAccountId String        @db.Uuid
+  socialAccount   SocialAccount @relation(fields: [socialAccountId], references: [id], onDelete: Cascade)
+  name            String
+  keywords        Json
+  replyMessage    String
+  url             String
+  cooldownMinutes Int           @default(60)
+  status          String        @default("draft")
+
+  processedComments AutomationProcessedComment[]
+  events            AutomationEvent[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([userId])
+  @@index([socialAccountId])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("comment_automations")
+}
+
+model AutomationProcessedComment {
+  id           String            @id @default(uuid()) @db.Uuid
+  automationId String            @db.Uuid
+  automation   CommentAutomation @relation(fields: [automationId], references: [id], onDelete: Cascade)
+  commentId    String
+  status       String
+  replyId      String?
+  error        String?
+  processedAt  DateTime          @default(now())
+
+  @@unique([automationId, commentId])
+  @@index([processedAt])
+  @@map("automation_processed_comments")
+}
+
+model AutomationEvent {
+  id                String            @id @default(uuid()) @db.Uuid
+  automationId      String            @db.Uuid
+  automation        CommentAutomation @relation(fields: [automationId], references: [id], onDelete: Cascade)
+  socialAccountId   String?           @db.Uuid
+  eventType         String
+  commentId         String?
+  mediaId           String?
+  commenterUsername String?
+  commentText       String?
+  replyId           String?
+  createdAt         DateTime          @default(now())
+
+  @@index([automationId])
+  @@index([socialAccountId])
+  @@index([eventType])
+  @@index([createdAt])
+  @@map("automation_events")
 }
