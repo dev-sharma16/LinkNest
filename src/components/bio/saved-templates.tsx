@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Bookmark, Check, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Bookmark, Check, MoreHorizontal, Pencil, Trash2, Copy, Sparkles } from "lucide-react";
 import type { SavedTemplate } from "@/hooks/use-templates";
 import { DEFAULT_THEME } from "@/lib/bio-themes";
 import type { ThemeStyleValues } from "@/lib/validations/bio";
@@ -126,6 +126,7 @@ export function SavedTemplateSection({
   onApply,
   onRename,
   onDelete,
+  onDuplicate,
 }: {
   saved: SavedTemplate[];
   loading?: boolean;
@@ -139,6 +140,7 @@ export function SavedTemplateSection({
     appearance?: Record<string, unknown>,
   ) => void | Promise<void>;
   onDelete: (id: string) => void;
+  onDuplicate?: (id: string) => void;
 }) {
   const [renameTarget, setRenameTarget] = useState<SavedTemplate | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<SavedTemplate | null>(null);
@@ -208,8 +210,20 @@ export function SavedTemplateSection({
                 />
                 <span className="mt-1 text-sm font-semibold">{template.name}</span>
                 <span className="hidden text-[11px] leading-tight text-muted-foreground sm:block">
-                  Custom template
+                  {template.source === "ai" ? (
+                    <span className="flex items-center justify-center gap-1">
+                      <Sparkles className="h-2.5 w-2.5" />
+                      AI Generated
+                    </span>
+                  ) : (
+                    "Custom template"
+                  )}
                 </span>
+                {template.compatibility && template.compatibility !== "both" && (
+                  <span className="text-[10px] text-muted-foreground/70">
+                    {template.compatibility === "link_in_bio" ? "Bio only" : "Storefront only"}
+                  </span>
+                )}
               </button>
 
               {/* Sibling of the card button, so no interactive element nesting. */}
@@ -240,6 +254,14 @@ export function SavedTemplateSection({
                       <Pencil className="h-4 w-4" />
                       Rename
                     </DropdownMenuItem>
+                    {onDuplicate && (
+                      <DropdownMenuItem
+                        onClick={() => onDuplicate(template.id)}
+                      >
+                        <Copy className="h-4 w-4" />
+                        Duplicate
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem
                       variant="destructive"
                       onClick={() => setDeleteTarget(template)}

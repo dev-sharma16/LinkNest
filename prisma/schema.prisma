@@ -37,6 +37,7 @@ model User {
   savedTemplates     SavedTemplate[]
   socialAccounts     SocialAccount[]
   commentAutomations CommentAutomation[]
+  aiGenerations      AIGeneration[]
 
   @@unique([email])
   @@map("users")
@@ -381,17 +382,21 @@ model Lead {
 // ============================================================
 
 model SavedTemplate {
-  id         String   @id @default(uuid()) @db.Uuid
-  userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name       String
-  type       String // "bio" | "storefront"
-  appearance Json
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id            String   @id @default(uuid()) @db.Uuid
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String
+  description   String?
+  type          String // "bio" | "storefront"
+  source        String   @default("manual") // "manual" | "ai"
+  compatibility String   @default("both") // "link_in_bio" | "storefront" | "both"
+  appearance    Json
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   @@unique([userId, name, type])
   @@index([userId, type])
+  @@index([userId, source])
   @@map("saved_templates")
 }
 
@@ -571,4 +576,29 @@ model AutomationEvent {
   @@index([eventType])
   @@index([createdAt])
   @@map("automation_events")
+}
+
+// ============================================================
+// Phase 6 - AI Builder & Custom Presets
+// ============================================================
+
+model AIGeneration {
+  id               String   @id @default(uuid()) @db.Uuid
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  targetType       String   // "link_in_bio" | "storefront"
+  prompt           String
+  useCase          String?
+  status           String   @default("pending") // "pending" | "processing" | "completed" | "failed" | "cancelled"
+  designSpec       Json?
+  referenceMetadata Json?
+  error            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, targetType])
+  @@index([status])
+  @@index([createdAt])
+  @@map("ai_generations")
 }

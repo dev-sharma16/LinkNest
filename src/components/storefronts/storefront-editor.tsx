@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ExternalLink, Loader2 } from "lucide-react";
+import { ExternalLink, Loader2, Sparkles } from "lucide-react";
 import { fetchJson, useStorefront } from "@/hooks/use-storefronts";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -13,12 +13,14 @@ import { StorefrontFormDialog } from "@/components/storefronts/storefront-form";
 import { ProductEditor } from "@/components/storefronts/product-editor";
 import { StorefrontAppearanceEditor } from "@/components/storefronts/storefront-appearance-editor";
 import { CopyLinkButton } from "@/components/ui/copy-link-button";
+import { AIBuilderDialog } from "@/components/ai-builder";
 import { toast } from "sonner";
 
 export function StorefrontEditor({ storefrontId }: { storefrontId: string }) {
   const qc = useQueryClient();
   const { data: storefront, isLoading } = useStorefront(storefrontId);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [aiOpen, setAiOpen] = useState(false);
 
   const publishMutation = useMutation({
     mutationFn: (published: boolean) =>
@@ -51,6 +53,11 @@ export function StorefrontEditor({ storefrontId }: { storefrontId: string }) {
     ? `/s/${storefront.slug}`
     : null;
 
+  function handleAISuccess() {
+    qc.invalidateQueries({ queryKey: ["storefronts", storefrontId] });
+    toast.success("AI design applied to your storefront");
+  }
+
   return (
     <div className="grid gap-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -62,6 +69,10 @@ export function StorefrontEditor({ storefrontId }: { storefrontId: string }) {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <Button variant="outline" onClick={() => setAiOpen(true)}>
+            <Sparkles className="mr-2 h-4 w-4" />
+            Create with AI
+          </Button>
           <label className="flex items-center gap-2 text-sm">
             <Switch
               checked={storefront.published}
@@ -119,6 +130,13 @@ export function StorefrontEditor({ storefrontId }: { storefrontId: string }) {
           seoDescription: storefront.seoDescription,
           ogImage: storefront.ogImage,
         }}
+      />
+
+      <AIBuilderDialog
+        open={aiOpen}
+        onOpenChange={setAiOpen}
+        targetType="storefront"
+        onSuccess={handleAISuccess}
       />
     </div>
   );

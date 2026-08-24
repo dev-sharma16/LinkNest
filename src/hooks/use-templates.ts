@@ -5,7 +5,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 export type SavedTemplate = {
   id: string;
   name: string;
+  description?: string | null;
   type: "bio" | "storefront";
+  source: "manual" | "ai";
+  compatibility: "link_in_bio" | "storefront" | "both";
   appearance: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
@@ -30,7 +33,13 @@ export function useSavedTemplates(type: "bio" | "storefront") {
   });
 
   const create = useMutation({
-    mutationFn: (input: { name: string; appearance: Record<string, unknown> }) =>
+    mutationFn: (input: {
+      name: string;
+      description?: string;
+      source?: "manual" | "ai";
+      compatibility?: "link_in_bio" | "storefront" | "both";
+      appearance: Record<string, unknown>;
+    }) =>
       fetchJson<SavedTemplate>("/api/templates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -43,6 +52,9 @@ export function useSavedTemplates(type: "bio" | "storefront") {
     mutationFn: (input: {
       id: string;
       name?: string;
+      description?: string;
+      source?: "manual" | "ai";
+      compatibility?: "link_in_bio" | "storefront" | "both";
       appearance?: Record<string, unknown>;
     }) =>
       fetchJson<SavedTemplate>(`/api/templates/${input.id}`, {
@@ -50,6 +62,9 @@ export function useSavedTemplates(type: "bio" | "storefront") {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: input.name,
+          description: input.description,
+          source: input.source,
+          compatibility: input.compatibility,
           appearance: input.appearance,
         }),
       }),
@@ -62,5 +77,11 @@ export function useSavedTemplates(type: "bio" | "storefront") {
     onSuccess: () => qc.invalidateQueries({ queryKey: key }),
   });
 
-  return { list, create, update, remove };
+  const duplicate = useMutation({
+    mutationFn: (id: string) =>
+      fetchJson<SavedTemplate>(`/api/templates/${id}`, { method: "POST" }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: key }),
+  });
+
+  return { list, create, update, remove, duplicate };
 }

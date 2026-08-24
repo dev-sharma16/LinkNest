@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Save, ExternalLink, Loader2 } from "lucide-react";
+import { Save, ExternalLink, Loader2, Sparkles } from "lucide-react";
 import { fetchJson, useBioProfile, type BioProfile } from "@/hooks/use-bio";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -17,11 +17,13 @@ import { SocialLinksEditor } from "@/components/bio/social-links-editor";
 import { ThemeEditor } from "@/components/bio/theme-editor";
 import { UploadButton } from "@/components/bio/upload-button";
 import { CopyLinkButton } from "@/components/ui/copy-link-button";
+import { AIBuilderDialog } from "@/components/ai-builder";
 import { toast } from "sonner";
 
 export function BioEditor() {
   const qc = useQueryClient();
   const { data: profile, isLoading } = useBioProfile();
+  const [aiOpen, setAiOpen] = useState(false);
 
   const publishMutation = useMutation({
     mutationFn: (published: boolean) =>
@@ -32,6 +34,8 @@ export function BioEditor() {
       }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["bio-profile"] });
+      qc.invalidateQueries({ queryKey: ["bio-blocks"] });
+      qc.invalidateQueries({ queryKey: ["bio-socials"] });
       toast.success("Published changes");
     },
     onError: (e: Error) => toast.error(e.message),
@@ -47,6 +51,13 @@ export function BioEditor() {
 
   const publicUrl = profile.published ? `/u/${profile.username}` : null;
 
+  function handleAISuccess() {
+    qc.invalidateQueries({ queryKey: ["bio-profile"] });
+    qc.invalidateQueries({ queryKey: ["bio-blocks"] });
+    qc.invalidateQueries({ queryKey: ["bio-socials"] });
+    toast.success("AI design applied to your page");
+  }
+
   return (
     <div className="grid gap-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -58,6 +69,10 @@ export function BioEditor() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <Button variant="outline" onClick={() => setAiOpen(true)}>
+            <Sparkles className="mr-2 h-4 w-4" />
+            Create with AI
+          </Button>
           <label className="flex items-center gap-2 text-sm">
             <Switch
               checked={profile.published}
@@ -101,6 +116,13 @@ export function BioEditor() {
           <ThemeEditor initial={profile.appearance} />
         </TabsContent>
       </Tabs>
+
+      <AIBuilderDialog
+        open={aiOpen}
+        onOpenChange={setAiOpen}
+        targetType="link_in_bio"
+        onSuccess={handleAISuccess}
+      />
     </div>
   );
 }

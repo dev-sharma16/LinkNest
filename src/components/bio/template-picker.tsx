@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Palette, Save } from "lucide-react";
+import { Palette, Save, Sparkles } from "lucide-react";
 import type { SavedTemplate } from "@/hooks/use-templates";
 import type { ThemePreset } from "@/lib/bio-themes";
 import { Button } from "@/components/ui/button";
@@ -14,8 +14,8 @@ import {
 
 /**
  * The "Choose a template" block. A tab toggle switches between the built-in
- * presets and the user's saved (custom) templates, so both stay one screen
- * tall instead of stacking into a long scroll.
+ * presets, the user's saved (custom) templates, and AI-generated presets,
+ * so all stay one screen tall instead of stacking into a long scroll.
  */
 export function TemplatePicker({
   presets,
@@ -54,10 +54,16 @@ export function TemplatePicker({
 }) {
   // Land on "My templates" when the active look is a saved template, so the
   // highlight is visible without the user having to switch tabs.
-  const [tab, setTab] = useState<"presets" | "saved">(
-    activeId.startsWith("saved:") ? "saved" : "presets",
-  );
+  const defaultTab = activeId.startsWith("saved:")
+    ? saved.some((s) => s.source === "ai" && `saved:${s.id}` === activeId)
+      ? "ai"
+      : "saved"
+    : "presets";
+  const [tab, setTab] = useState<"presets" | "saved" | "ai">(defaultTab);
   const [saveOpen, setSaveOpen] = useState(false);
+
+  const manualTemplates = saved.filter((s) => s.source !== "ai");
+  const aiTemplates = saved.filter((s) => s.source === "ai");
 
   async function handleSaveCurrent(name: string) {
     await onSaveCurrent(name);
@@ -81,15 +87,24 @@ export function TemplatePicker({
 
       <Tabs
         value={tab}
-        onValueChange={(value) => setTab(value as "presets" | "saved")}
+        onValueChange={(value) => setTab(value as "presets" | "saved" | "ai")}
       >
         <TabsList className="mb-4">
           <TabsTrigger value="presets">Presets</TabsTrigger>
           <TabsTrigger value="saved">
             My templates
-            {!savedLoading && saved.length > 0 ? (
+            {!savedLoading && manualTemplates.length > 0 ? (
               <span className="ml-1 rounded-full bg-primary/10 px-1.5 text-[11px] font-semibold text-primary">
-                {saved.length}
+                {manualTemplates.length}
+              </span>
+            ) : null}
+          </TabsTrigger>
+          <TabsTrigger value="ai">
+            <Sparkles className="mr-1 h-3 w-3" />
+            AI Generated
+            {!savedLoading && aiTemplates.length > 0 ? (
+              <span className="ml-1 rounded-full bg-primary/10 px-1.5 text-[11px] font-semibold text-primary">
+                {aiTemplates.length}
               </span>
             ) : null}
           </TabsTrigger>
@@ -106,7 +121,20 @@ export function TemplatePicker({
 
         <TabsContent value="saved">
           <SavedTemplateSection
-            saved={saved}
+            saved={manualTemplates}
+            loading={savedLoading}
+            activeId={activeId}
+            variant={variant}
+            currentAppearance={currentAppearance}
+            onApply={onApplySaved}
+            onRename={onRenameSaved}
+            onDelete={onDeleteSaved}
+          />
+        </TabsContent>
+
+        <TabsContent value="ai">
+          <SavedTemplateSection
+            saved={aiTemplates}
             loading={savedLoading}
             activeId={activeId}
             variant={variant}

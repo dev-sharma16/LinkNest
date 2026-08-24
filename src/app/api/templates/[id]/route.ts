@@ -1,5 +1,9 @@
 import { getApiUser, unauthorizedResponse } from "@/server/auth";
-import { deleteSavedTemplate, updateSavedTemplate } from "@/server/saved-templates";
+import {
+  deleteSavedTemplate,
+  updateSavedTemplate,
+  duplicateSavedTemplate,
+} from "@/server/saved-templates";
 
 export async function PATCH(
   request: Request,
@@ -33,6 +37,24 @@ export async function DELETE(
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Failed to delete template";
+    return Response.json({ error: message }, { status: 400 });
+  }
+}
+
+export async function POST(
+  _request: Request,
+  ctx: RouteContext<"/api/templates/[id]">,
+) {
+  const user = await getApiUser();
+  if (!user) return unauthorizedResponse();
+
+  const { id } = await ctx.params;
+  try {
+    const template = await duplicateSavedTemplate(user.id, id);
+    return Response.json(template);
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Failed to duplicate template";
     return Response.json({ error: message }, { status: 400 });
   }
 }
