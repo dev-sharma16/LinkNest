@@ -13,10 +13,10 @@ export default function AuthLayout({
         <ThemeToggle />
       </div>
       <Link href="/" className="mb-8 flex items-center gap-2">
-        <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+        <span className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-[#cc785c] text-white">
           <LinkIcon className="h-5 w-5" />
         </span>
-        <span className="text-lg font-semibold tracking-tight">LinkNest</span>
+        <span className="text-lg font-semibold tracking-tight font-serif text-[#141413] dark:text-[#faf9f5]">LinkNest</span>
       </Link>
       <div className="w-full max-w-md">{children}</div>
     </div>

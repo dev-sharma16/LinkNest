@@ -42,7 +42,7 @@ function buttonColors(t: ThemeStyleValues): CSSProperties {
     return {
       background: "transparent",
       color: "var(--bio-btn-bg)",
-      border: "2px solid var(--bio-btn-bg)",
+      border: "1px solid var(--bio-btn-bg)",
     };
   }
   if (t.buttonStyle === "ghost") {
@@ -63,7 +63,7 @@ function buttonColors(t: ThemeStyleValues): CSSProperties {
 function cardColors(t: ThemeStyleValues): CSSProperties {
   if (t.cardStyle === "outlined") {
     return {
-      background: "color-mix(in srgb, var(--bio-text) 4%, transparent)",
+      background: "transparent",
       border: "1px solid color-mix(in srgb, var(--bio-text) 18%, transparent)",
       boxShadow: "none",
     };
@@ -76,7 +76,7 @@ function cardColors(t: ThemeStyleValues): CSSProperties {
     };
   }
   return {
-    background: "color-mix(in srgb, var(--bio-text) 6%, transparent)",
+    background: "#ffffff",
     border: "1px solid color-mix(in srgb, var(--bio-text) 10%, transparent)",
     boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
   };

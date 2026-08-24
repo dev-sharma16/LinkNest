@@ -161,7 +161,7 @@ export default async function StorefrontPage({
         </div>
       ) : null}
 
-      <div className="mx-auto w-full max-w-4xl px-4 py-10">
+      <div className="mx-auto w-full max-w-5xl px-4 py-24">
         <header style={{ textAlign: theme.alignment }}>
           {storefront.coverImage ? (
             <div style={{ animation: "bio-rise 0.5s ease-out both" }}>
@@ -170,7 +170,7 @@ export default async function StorefrontPage({
                 alt={storefront.name}
                 width={96}
                 height={96}
-                className="mx-auto rounded-2xl border object-cover transition-transform duration-300 hover:scale-105"
+                className="rounded-[16px] border object-cover transition-transform duration-300 hover:scale-105"
                 style={{
                   borderColor: "color-mix(in srgb, var(--sf-primary) 40%, transparent)",
                   boxShadow: "0 0 0 4px color-mix(in srgb, var(--sf-primary) 14%, transparent), 0 10px 30px rgba(0,0,0,0.12)",
@@ -179,13 +179,18 @@ export default async function StorefrontPage({
             </div>
           ) : null}
           <h1
-            className="mt-4 text-3xl font-bold tracking-tight"
-            style={{ fontSize: "calc(var(--sf-font-size) + 10px)", animation: "bio-rise 0.5s ease-out 0.08s both" }}
+            className="mt-6 text-4xl font-bold tracking-tight"
+            style={{
+              fontFamily: "var(--font-serif)",
+              fontSize: "calc(var(--sf-font-size) + 20px)",
+              letterSpacing: "-1px",
+              animation: "bio-rise 0.5s ease-out 0.08s both"
+            }}
           >
             {storefront.name}
           </h1>
           {storefront.description ? (
-            <p className="mx-auto mt-2 max-w-xl text-base opacity-80" style={{ animation: "bio-rise 0.5s ease-out 0.16s both" }}>
+            <p className="mx-auto mt-4 max-w-xl text-lg opacity-80" style={{ animation: "bio-rise 0.5s ease-out 0.16s both" }}>
               {storefront.description}
             </p>
           ) : null}
@@ -195,8 +200,8 @@ export default async function StorefrontPage({
           <div
             className={
               isList
-                ? "mt-10 grid gap-(--sf-spacing)"
-                : "mt-10 grid gap-(--sf-spacing) sm:grid-cols-2 lg:grid-cols-3"
+                ? "mt-12 grid gap-(--sf-spacing)"
+                : "mt-12 grid gap-(--sf-spacing) sm:grid-cols-2 lg:grid-cols-3"
             }
           >
             {storefront.products.map((product) => (
@@ -215,7 +220,7 @@ export default async function StorefrontPage({
           </p>
         )}
 
-        <footer className="mt-14 text-center text-xs opacity-40">
+        <footer className="mt-24 text-center text-xs opacity-40">
           Made with LinkNest
         </footer>
       </div>
@@ -246,20 +251,20 @@ function ProductView({
   const cardStyle =
     theme.cardStyle === "outlined"
       ? {
-          background: "color-mix(in srgb, var(--sf-text) 4%, transparent)",
+          background: "transparent",
           border: "1px solid color-mix(in srgb, var(--sf-text) 18%, transparent)",
           boxShadow: "none",
         }
       : theme.cardStyle === "flat"
         ? {
             background: "transparent",
-            border: "1px solid color-mix(in srgb, var(--sf-text) 10%, transparent)",
+            border: "none",
             boxShadow: "none",
           }
         : {
-            background: "color-mix(in srgb, var(--sf-text) 6%, transparent)",
+            background: "#ffffff",
             border: "1px solid color-mix(in srgb, var(--sf-text) 10%, transparent)",
-            boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+            boxShadow: "none",
           };
   const shadow = {
     none: "",

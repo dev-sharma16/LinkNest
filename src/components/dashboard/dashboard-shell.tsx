@@ -54,8 +54,8 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
             href={item.href}
             onClick={onNavigate}
             className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
-              active && "bg-muted text-foreground",
+              "flex items-center gap-3 rounded-[8px] px-3 py-2 text-sm font-medium text-[#6c6a64] transition-colors hover:bg-[#efe9de] hover:text-[#141413] dark:text-[#a09d96] dark:hover:bg-[#252320] dark:hover:text-[#faf9f5]",
+              active && "bg-[#efe9de] text-[#141413] dark:bg-[#252320] dark:text-[#faf9f5]",
             )}
           >
             <item.icon className="h-4 w-4" />
@@ -70,10 +70,10 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
 function Brand() {
   return (
     <Link href="/links" className="flex items-center gap-2 px-4 pt-4 pb-2">
-      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+      <span className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-[#cc785c] text-white">
         <LinkIcon className="h-4 w-4" />
       </span>
-      <span className="text-base font-semibold tracking-tight">LinkNest</span>
+      <span className="text-base font-semibold tracking-tight font-serif text-[#141413] dark:text-[#faf9f5]">LinkNest</span>
     </Link>
   );
 }

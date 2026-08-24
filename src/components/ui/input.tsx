@@ -9,7 +9,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
       type={type}
       data-slot="input"
       className={cn(
-        "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
+        "h-10 w-full min-w-0 rounded-[8px] border border-[#e6dfd8] bg-[#faf9f5] px-3.5 py-2.5 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-[#cc785c] focus-visible:ring-2 focus-visible:ring-[#cc785c]/15 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-[#e8e0d2]/50 disabled:opacity-50 aria-invalid:border-[#c64545] aria-invalid:ring-2 aria-invalid:ring-[#c64545]/20 md:text-sm dark:bg-[#252320] dark:border-[#252320] dark:text-[#faf9f5] dark:placeholder:text-[#a09d96] dark:focus-visible:border-[#cc785c] dark:focus-visible:ring-[#cc785c]/15 dark:disabled:bg-[#1f1e1b] dark:aria-invalid:border-[#c64545]/50 dark:aria-invalid:ring-[#c64545]/40",
         className
       )}
       {...props}
