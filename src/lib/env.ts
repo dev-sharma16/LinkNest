@@ -19,6 +19,9 @@ const envSchema = z.object({
   INSTAGRAM_VERIFY_TOKEN: z.string().optional(),
   INSTAGRAM_WEBHOOK_SECRET: z.string().optional(),
   INSTAGRAM_ACCESS_TOKEN: z.string().optional(),
+  GEMINI_API_KEY: z.string().optional(),
+  AI_RATE_LIMIT_MAX: z.coerce.number().default(20),
+  AI_RATE_LIMIT_WINDOW: z.coerce.number().default(60),
 });
 
 const parsed = envSchema.safeParse(process.env);

@@ -37,6 +37,7 @@ model User {
   savedTemplates     SavedTemplate[]
   socialAccounts     SocialAccount[]
   commentAutomations CommentAutomation[]
+  aiGenerations      AIGeneration[]
 
   @@unique([email])
   @@map("users")
@@ -571,4 +572,36 @@ model AutomationEvent {
   @@index([eventType])
   @@index([createdAt])
   @@map("automation_events")
+}
+
+// ============================================================
+// LinkNest domain schema (Phase 6 - AI Foundation)
+// ============================================================
+
+model AIGeneration {
+  id            String   @id @default(uuid()) @db.Uuid
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  targetType    String // "bio" | "storefront"
+  prompt        String
+  useCase       String?
+  status        String   @default("pending") // pending | processing | completed | failed | cancelled
+  designSpec    Json?
+  referenceMeta Json? // extracted reference URLs, image metadata
+  result        Json? // generated blocks/products/appearance
+  error         String?
+  provider      String   @default("gemini")
+  model         String   @default("gemini-2.5-flash")
+  inputTokens   Int      @default(0)
+  outputTokens  Int      @default(0)
+  estimatedCost Float    @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([deletedAt])
+  @@map("ai_generations")
 }
